@@ -5,20 +5,20 @@ var codeMirror = CodeMirror(codeEditorNode, {
     lineNumbers: true,
     mode: 'zminst',
     firstLineNumber: 0
-  });
+});
 
-function execute(){
-    
+function execute() {
+
     zm.enterCode(codeMirror.doc.getValue())
     zm.execute()
 }
 
-function restart(){
+function restart() {
     zm = new Zahlenmaschine()
     updateInfo()
 }
 
-function executeStep(){
+function executeStep() {
     zm.enterCode(codeMirror.doc.getValue())
     zm.executeStep()
     updateInfo()
@@ -27,4 +27,9 @@ function executeStep(){
 function updateInfo() {
     document.getElementById("accumulator").innerHTML = "Accumulator: " + zm.accumulator;
     document.getElementById("instruction-pointer").innerHTML = "Instruction pointer: " + zm.instructionPointer;
+}
+
+function loadFile() {
+    const selectedFile = document.getElementById('uploadInput').files[0];
+    selectedFile.text().then((text) => codeMirror.swapDoc(CodeMirror.Doc(text, 'zminst')))
 }
