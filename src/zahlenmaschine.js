@@ -2,6 +2,7 @@ class Zahlenmaschine {
     constructor() {
         this.instructionPointer = 0;
         this.accumulator = 0;
+        this.status = false;
         this.running = true;
     }
 
@@ -43,12 +44,37 @@ class Zahlenmaschine {
         },
         'end' : (arg1, arg2) => {
             this.endWith(arg1);
+        },
+        'rst' : (arg1, arg2) => {
+            this.accumulator = 0;
+            this.status = false;
+        },
+        'jtr' : (arg1, arg2) => {
+            if(this.status){
+                this.instructionPointer = Number(arg1); 
+            }
+        },
+        'grt' : (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) > Number(arg2)
+        }
+    }
+    
+    getStorageValue(argument){
+        if(argument == "acc"){
+            return this.accumulator;
+        }
+        if(argument == "isp"){
+            return this.instructionPointer;
+        }
+        if(argument == "sta"){
+            return Number(this.status);
         }
     }
 
     executeStep() {
         if(!this.running){
             alert("The Zahlenmaschine is not running!");
+            return;
         }
 
         // fetch instruction

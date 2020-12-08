@@ -1,6 +1,8 @@
 CodeMirror.defineMode('zminst', function (config) {
 
-    keywords = ["jmp", "acc", "nop", "jab", "end"]
+    keywords = ["jmp", "acc", "nop", "jab", "end", "rst", "jtr", "grt"]
+
+    storage = ["acc", "isp", "sta"]
 
     return {
         token: function (stream, state) {

@@ -41,6 +41,7 @@
       </button>
       <p id="accumulator">Accumulator: 0</p>
       <p id="instruction-pointer">Instruction pointer: 0</p>
+      <p id="status">Status: false</p>
       <div class="form-group">
         <div class="row">
           <div class="col">
@@ -53,12 +54,13 @@
   </div>
   <div>
     <h3>User guide</h3>
+    Numbers are arbitrary integers. Storage may be one of: acc (Accumulator), sta (Status Register), isp (Instruction Pointer) <!--, input, data register --> . Value may be anything.
     <table class="table">
       <tr>
-        <td>Operation</td>
-        <td>arg1</td>
-        <td>arg2</td>
-        <td>Explanation</td>
+        <th>Operation</th>
+        <th>arg1</th>
+        <th>arg2</th>
+        <th>Explanation</th>
       </tr>
       <tr>
         <td>acc</td>
@@ -83,6 +85,24 @@
         <td>Number</td>
         <td>-</td>
         <td>Absolute jump to Number.</td>
+      </tr>
+      <tr>
+        <td>jtr</td>
+        <td>Number</td>
+        <td>-</td>
+        <td>Absolute jump to Number only when status is true.</td>
+      </tr>
+      <tr>
+        <td>grt</td>
+        <td>Storage</td>
+        <td>Number</td>
+        <td>If value in Storage is greater than Number, set status to true</td>
+      </tr>
+      <tr>
+        <td>rst</td>
+        <td>-</td>
+        <td>-</td>
+        <td>Reset accumulator to 0, reset status to false</td>
       </tr>
       <tr>
         <td>end</td>

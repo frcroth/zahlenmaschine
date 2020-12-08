@@ -27,6 +27,7 @@ function executeStep() {
 function updateInfo() {
     document.getElementById("accumulator").innerHTML = "Accumulator: " + zm.accumulator;
     document.getElementById("instruction-pointer").innerHTML = "Instruction pointer: " + zm.instructionPointer;
+    document.getElementById("status").innerHTML = "Status: " + zm.status;
 }
 
 function loadFile() {
