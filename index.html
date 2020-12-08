@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+
+  <title>Zahlenmaschine</title>
+  <meta name="description" content="Zahlenmaschine" />
+  <meta name="author" content="frcroth" />
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="css/custom.css" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <h1>Zahlenmaschine</h1>
+  <p>The "Zahlenmaschine" is a simple computer, programmed with an assembly-like language.</p>
+  <script src="lib/codemirror.js"></script>
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <script src="mode/zminst.js"></script>
+
+  <div class="row">
+    <div class="col-sm" id="editor"></div>
+    <div class="col-sm" id="options">
+      <button disabled onclick="execute()" class="btn btn-secondary">
+        Execute program
+      </button>
+      <button onclick="executeStep()" class="btn btn-secondary">
+        Execute one step
+      </button>
+      <button onclick="restart()" class="btn btn-secondary">
+        Restart machine
+      </button>
+      <p id="accumulator">Accumulator: 0</p>
+      <p id="instruction-pointer">Instruction pointer: 0</p>
+    </div>
+  </div>
+  <div>
+      <h3>User guide</h3>
+      <table class="table">
+        <tr><td>Operation</td><td>arg1</td><td>arg2</td><td>Explanation</td></tr>
+        <tr><td>acc</td><td>Number</td><td>-</td><td>Add Number (may be negative) to accumulator.</td></tr>
+        <tr><td>nop</td><td>-</td><td>-</td><td>Do nothing</td></tr>
+        <tr><td>jmp</td><td>Number</td><td>-</td><td>Jump Number instructions</td></tr>
+        <tr><td>jab</td><td>Number</td><td>-</td><td>Absolute jump to Number.</td></tr>
+        <tr><td>end</td><td>Value</td><td>-</td><td>Stop machine gracefully with return value</td></tr>
+      </table>
+    </div>
+
+  <!-- BOOTSTRAP -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- Custom scripts -->
+  <script src="src/index.js"></script>
+  <script src="src/zahlenmaschine.js"></script>
+
+  <script>var zm = new Zahlenmaschine();</script>
+</body>
+
+</html>
