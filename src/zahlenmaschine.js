@@ -96,43 +96,48 @@ class Zahlenmaschine {
         'jtr' : (arg1, arg2) => {
             if(this.status){
                 if(this.getLabel(arg1)){
-                    this.instructionPointer = Number(this.getLabel(arg1).line)
+                    this.instructionPointer = Number(this.getLabel(arg1).line);
                 } else {
                     this.instructionPointer = Number(arg1);
                 }
             }
         },
         'grt' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) > Number(arg2)
+            this.status = this.getStorageValue(arg1) > Number(arg2);
         },
         'geq' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) >= Number(arg2)
+            this.status = this.getStorageValue(arg1) >= Number(arg2);
         },
         'equ' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) == Number(arg2)
+            this.status = this.getStorageValue(arg1) == Number(arg2);
         },
         'leq' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) <= Number(arg2)
+            this.status = this.getStorageValue(arg1) <= Number(arg2);
         },
         'les' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) < Number(arg2)
+            this.status = this.getStorageValue(arg1) < Number(arg2);
         },
         'add' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) + Number(arg2)
+            this.r1 = Number(this.getStorageValue(arg1)) + Number(arg2);
         },
         'adr' : (arg1, arg2) => { //Include this into add?
-            this.r1 = Number(this.getStorageValue(arg1)) + Number(this.getStorageValue(arg2))
+            this.r1 = Number(this.getStorageValue(arg1)) + Number(this.getStorageValue(arg2));
         },
         'sub' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) - Number(arg2)
+            this.r1 = Number(this.getStorageValue(arg1)) - Number(arg2);
         },
         'mul' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) * Number(arg2)
+            this.r1 = Number(this.getStorageValue(arg1)) * Number(arg2);
         },
         'neg' : (arg1, arg2) => {
-            this.r1 = - Number(this.getStorageValue(arg1))
+            this.r1 = - Number(this.getStorageValue(arg1));
         },
         'mov' : (arg1, arg2) => {
+            this.setStorageValue(arg2, this.getStorageValue(arg1));
+        },
+        'swp' : (arg1, arg2) => {
+            let arg1Value = this.getStorageValue(arg1);
+            this.setStorageValue(arg1, this.getStorageValue(arg2))
             this.setStorageValue(arg2, this.getStorageValue(arg1))
         }
     }
