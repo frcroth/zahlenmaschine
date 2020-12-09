@@ -6,35 +6,54 @@ class Zahlenmaschine {
         this.r2 = 0;
         this.status = false;
         this.running = true;
-        this.specification = "1"
+        this.specification = "1";
+        this.labels = [];
     }
 
     parseCode(string_code){
         let code = [];
+        let instructionIndex = 0;
+        let pending_labels = []; //labels that have no code associated
         for(let i = 0; i < string_code.length; i++){
             // find comment
             let comment = string_code[i].trim().split(';').length > 1 ? string_code[i].trim().split(';')[1] : undefined;
             
             // annotation ";zminst v1" may be used to select specification
             if (comment?.startsWith("zminst v")){
-                this.selectSpecVersion(comment)
+                this.selectSpecVersion(comment);
             }
             
             let instruction = string_code[i].trim().split(';')[0]
 
-            let tokens = instruction.split(' ')
-        
-            let operation = tokens[0]
-            if(operation == ""){
+            // find label
+            if (instruction.endsWith(':')){
+                let labelName = instruction.split(':')[0]
+                pending_labels.push(labelName);
                 continue;
             }
-            
+
+            let tokens = instruction.split(' ');
+        
+            let operation = tokens[0];
+            if(operation == ""){
+                continue;
+            }           
+
             let arg1 = (tokens.length > 1) ? tokens[1] : undefined;
             let arg2 = (tokens.length > 2) ? tokens[2] : undefined;
             let codePosition = i;
+            
+
+            // fix pending labels
+            for(const labelName of pending_labels){
+                this.labels.push({name: labelName, line: instructionIndex})
+            }
+            pending_labels = []
+
             code.push({
-                operation, arg1, arg2, codePosition
+                operation, arg1, arg2, codePosition, instructionIndex
             })
+            instructionIndex++;
         }
         return code;
     }
@@ -55,10 +74,15 @@ class Zahlenmaschine {
             console.log("Nothing happened...");
         },
         'jmp' : (arg1, arg2) => {
-            this.instructionPointer += Number(arg1);
+            if(this.getLabel(arg1)){
+                this.instructionPointer = Number(this.getLabel(arg1).line)
+            } else {
+                this.instructionPointer = Number(arg1);
+            }
+            
         },
-        'jab' : (arg1, arg2) => { // Absolute jump
-            this.instructionPointer = Number(arg1);
+        'jre' : (arg1, arg2) => { // Relative jump
+            this.instructionPointer += Number(arg1);
         },
         'end' : (arg1, arg2) => {
             this.endWith(arg1);
@@ -71,7 +95,11 @@ class Zahlenmaschine {
         },
         'jtr' : (arg1, arg2) => {
             if(this.status){
-                this.instructionPointer = Number(arg1); 
+                if(this.getLabel(arg1)){
+                    this.instructionPointer = Number(this.getLabel(arg1).line)
+                } else {
+                    this.instructionPointer = Number(arg1);
+                }
             }
         },
         'grt' : (arg1, arg2) => {
@@ -92,7 +120,7 @@ class Zahlenmaschine {
         'add' : (arg1, arg2) => {
             this.r1 = Number(this.getStorageValue(arg1)) + Number(arg2)
         },
-        'adr' : (arg1, arg2) => {
+        'adr' : (arg1, arg2) => { //Include this into add?
             this.r1 = Number(this.getStorageValue(arg1)) + Number(this.getStorageValue(arg2))
         },
         'sub' : (arg1, arg2) => {
@@ -107,6 +135,10 @@ class Zahlenmaschine {
         'mov' : (arg1, arg2) => {
             this.setStorageValue(arg2, this.getStorageValue(arg1))
         }
+    }
+
+    getLabel(string) {
+        return this.labels.find((label) => label.name == string)
     }
 
     setStorageValue(argument, value) {

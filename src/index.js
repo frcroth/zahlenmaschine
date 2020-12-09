@@ -1,7 +1,7 @@
 let codeEditorNode = document.getElementById("editor")
 
 var codeMirror = CodeMirror(codeEditorNode, {
-    value: ";zminst v1\nacc 1\nacc 2\nacc 4\nacc 8\nnop ;do nothing\njmp -4",
+    value: ";zminst v1\nacc 1\nacc 2\nacc 4\nacc 8\nnop ;do nothing\njmp 1",
     lineNumbers: true,
     mode: 'zminst',
     firstLineNumber: 0
