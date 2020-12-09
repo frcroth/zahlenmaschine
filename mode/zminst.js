@@ -1,12 +1,12 @@
 CodeMirror.defineMode('zminst', function (config) {
 
-    keywords = ["jmp", "acc", "nop", "jab", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les"]
+    keywords = ["jmp", "acc", "nop", "jab", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les", "add", "adr", "mul", "sub", "neg", "mov"]
 
-    storage = ["acc", "isp", "sta"]
+    storage = ["acc", "isp", "sta", "nul", "r1", "r2"]
 
     return {
         startState: function () {
-            return {comment: false}
+            return { comment: false }
         },
         token: function (stream, state) {
             word = ""

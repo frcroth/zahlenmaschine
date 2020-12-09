@@ -1,0 +1,7 @@
+;zminst v1
+;Calculate fibonacci numbers
+acc 1
+mov acc r2
+mov r1 acc
+adr r1 r2 ;saves current fibonacci number in r1
+jmp -3

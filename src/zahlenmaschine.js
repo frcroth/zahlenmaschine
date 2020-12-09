@@ -2,6 +2,8 @@ class Zahlenmaschine {
     constructor() {
         this.instructionPointer = 0;
         this.accumulator = 0;
+        this.r1 = 0;
+        this.r2 = 0;
         this.status = false;
         this.running = true;
         this.specification = "1"
@@ -63,6 +65,8 @@ class Zahlenmaschine {
         },
         'rst' : (arg1, arg2) => {
             this.accumulator = 0;
+            this.r1 = 0;
+            this.r2 = 0;
             this.status = false;
         },
         'jtr' : (arg1, arg2) => {
@@ -84,6 +88,45 @@ class Zahlenmaschine {
         },
         'les' : (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) < Number(arg2)
+        },
+        'add' : (arg1, arg2) => {
+            this.r1 = Number(this.getStorageValue(arg1)) + Number(arg2)
+        },
+        'adr' : (arg1, arg2) => {
+            this.r1 = Number(this.getStorageValue(arg1)) + Number(this.getStorageValue(arg2))
+        },
+        'sub' : (arg1, arg2) => {
+            this.r1 = Number(this.getStorageValue(arg1)) - Number(arg2)
+        },
+        'mul' : (arg1, arg2) => {
+            this.r1 = Number(this.getStorageValue(arg1)) * Number(arg2)
+        },
+        'neg' : (arg1, arg2) => {
+            this.r1 = - Number(this.getStorageValue(arg1))
+        },
+        'mov' : (arg1, arg2) => {
+            this.setStorageValue(arg2, this.getStorageValue(arg1))
+        }
+    }
+
+    setStorageValue(argument, value) {
+        if(argument == "acc"){
+           this.accumulator = value;
+        }
+        if(argument == "isp"){
+            this.instructionPointer = value;
+        }
+        if(argument == "sta"){
+            this.status = value;
+        }
+        if(argument == "r1"){
+            this.r1 = value;
+        }
+        if(argument == "r2"){
+            this.r2 = value;
+        }
+        if(argument == "nul"){
+            // Can't overwrite null!
         }
     }
     
@@ -96,6 +139,15 @@ class Zahlenmaschine {
         }
         if(argument == "sta"){
             return Number(this.status);
+        }
+        if(argument == "r1"){
+            return Number(this.r1);
+        }
+        if(argument == "r2"){
+            return Number(this.r2);
+        }
+        if(argument == "nul"){
+            return 0;
         }
     }
 

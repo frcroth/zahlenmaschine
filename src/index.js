@@ -28,6 +28,8 @@ function updateInfo() {
     document.getElementById("accumulator").innerHTML = "Accumulator: " + zm.accumulator;
     document.getElementById("instruction-pointer").innerHTML = "Instruction pointer: " + zm.instructionPointer;
     document.getElementById("status").innerHTML = "Status: " + zm.status;
+    document.getElementById("r1").innerHTML = "Data r1: " + zm.r1;
+    document.getElementById("r2").innerHTML = "Data r2: " + zm.r2;
 }
 
 function loadFile() {

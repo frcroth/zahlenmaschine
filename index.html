@@ -42,6 +42,8 @@
       <p id="accumulator">Accumulator: 0</p>
       <p id="instruction-pointer">Instruction pointer: 0</p>
       <p id="status">Status: false</p>
+      <p id="r1">Data r1: 0</p>
+      <p id="r2">Data r2: 0</p>
       <div class="form-group">
         <div class="row">
           <div class="col">
@@ -55,7 +57,7 @@
   <div>
     <h3>User guide</h3>
     Numbers are arbitrary integers. Storage may be one of: acc (Accumulator), sta (Status Register), isp (Instruction
-    Pointer)
+    Pointer), r1 (data register 1), r2 (data register 2), nul (Immutable Zero)
     <!--, input, data register --> . Value may be anything. Comments may be added with the ';' character. All content in
     the line behind this character will be ignored.
     <table class="table">
@@ -72,10 +74,10 @@
         <td>Add Number (may be negative) to accumulator.</td>
       </tr>
       <tr>
-        <td>nop</td>
-        <td>-</td>
-        <td>-</td>
-        <td>Do nothing</td>
+        <th>Jumps</th>
+        <th></th>
+        <th></th>
+        <th></th>
       </tr>
       <tr>
         <td>jmp</td>
@@ -95,7 +97,6 @@
         <td>-</td>
         <td>Absolute jump to Number only when status is true.</td>
       </tr>
-      <hr />
       <tr>
         <th>Comparisons</th>
         <th></th>
@@ -133,16 +134,64 @@
         <td>If value in Storage is less than Number, set status to true</td>
       </tr>
       <tr>
+        <th>Working with the data register</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>add</td>
+        <td>Storage</td>
+        <td>Number</td>
+        <td>Add value in Storage to Number, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>adr</td>
+        <td>Storage1</td>
+        <td>Storage2</td>
+        <td>Add values in both Storages, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>sub</td>
+        <td>Storage</td>
+        <td>Number</td>
+        <td>Subtract Number from value in Storage, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>mul</td>
+        <td>Storage</td>
+        <td>Number</td>
+        <td>Multiply Number with value in Storage, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>neg</td>
+        <td>Storage</td>
+        <td>-</td>
+        <td>Negate value in Storage, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>mov</td>
+        <td>Storage1</td>
+        <td>Storage2</td>
+        <td>Copy value from Storage1 to Storage2</td>
+      </tr>
+      <tr>
         <th>Control operations</th>
         <th></th>
         <th></th>
         <th></th>
       </tr>
       <tr>
+        <td>nop</td>
+        <td>-</td>
+        <td>-</td>
+        <td>Do nothing</td>
+      </tr>
+      <tr>
         <td>rst</td>
         <td>-</td>
         <td>-</td>
-        <td>Reset accumulator to 0, reset status to false</td>
+        <td>Reset accumulator and data register to 0, reset status to false</td>
       </tr>
       <tr>
         <td>end</td>
