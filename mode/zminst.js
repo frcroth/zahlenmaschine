@@ -5,16 +5,30 @@ CodeMirror.defineMode('zminst', function (config) {
     storage = ["acc", "isp", "sta"]
 
     return {
+        startState: function () {
+            return {comment: false}
+        },
         token: function (stream, state) {
             word = ""
             while ((next = stream.next()) != null) {
-                if (next == " ") {
+                if (next == ";") {
+                    state.comment = true
+                }
+                if (next == " " && !state.comment) {
+                    break;
+                }
+                if (stream.eol()) {
+                    word += next;
                     break;
                 }
                 word += next;
 
             }
-            if (keywords.includes(word)) {
+            if (state.comment) {
+                state.comment = false
+                return "comment"
+            }
+            if (keywords.includes(word) && !state.comment) {
                 return "keyword"
             }
         },

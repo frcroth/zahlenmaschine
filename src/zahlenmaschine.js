@@ -4,17 +4,29 @@ class Zahlenmaschine {
         this.accumulator = 0;
         this.status = false;
         this.running = true;
+        this.specification = "1"
     }
 
     parseCode(string_code){
         let code = [];
         for(let i = 0; i < string_code.length; i++){
-            let tokens = string_code[i].trim().split(' ')
+            // find comment
+            let comment = string_code[i].trim().split(';').length > 1 ? string_code[i].trim().split(';')[1] : undefined;
             
+            // annotation ";zminst v1" may be used to select specification
+            if (comment?.startsWith("zminst v")){
+                this.selectSpecVersion(comment)
+            }
+            
+            let instruction = string_code[i].trim().split(';')[0]
+
+            let tokens = instruction.split(' ')
+        
             let operation = tokens[0]
             if(operation == ""){
                 continue;
             }
+            
             let arg1 = (tokens.length > 1) ? tokens[1] : undefined;
             let arg2 = (tokens.length > 2) ? tokens[2] : undefined;
             let codePosition = i;
@@ -27,6 +39,10 @@ class Zahlenmaschine {
 
     enterCode(code) {
         this.code = this.parseCode(code.split("\n"))
+    }
+
+    selectSpecVersion(comment) {
+        this.specification = comment.split("zminst v")[1]
     }
 
     operationDict = {
