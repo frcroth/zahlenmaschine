@@ -39,25 +39,15 @@
           <div class="col-s" id="input">
             <p>Input Queue</p>
             <div class="form-inline">
-              <input type="text" class="form-control" placeholder="42">
-              <button class="btn btn-primary mb-2 input-button">Add Input</button>
+              <input type="text" class="form-control input-text-field" placeholder="42">
+              <button onclick="addInput()" class="btn btn-primary mb-2 input-button">Add Input</button>
             </div>
-            <ul class="list-group">
-              <li class="list-group-item py-0 input-1"> -</li>
-              <li class="list-group-item py-0 input-2"> -</li>
-              <li class="list-group-item py-0 input-3"> -</li>
-              <li class="list-group-item py-0 input-4"> -</li>
-              <li class="list-group-item py-0 input-5"> -</li>
+            <ul class="list-group input-list">
             </ul>
           </div>
           <div class="col-s" id="output">
             <p>Output</p>
-            <ul class="list-group">
-              <li class="list-group-item py-0 output-1"> -</li>
-              <li class="list-group-item py-0 output-2"> -</li>
-              <li class="list-group-item py-0 output-3"> -</li>
-              <li class="list-group-item py-0 output-4"> -</li>
-              <li class="list-group-item py-0 output-5"> -</li>
+            <ul class="list-group output-list">
             </ul>
           </div>
         </div>
@@ -95,13 +85,15 @@
           </tr>
         </table>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="ioMode" id="interactiveRadio" value="option1" checked>
+          <input class="form-check-input" onchange="changeIOMode();" type="radio" name="ioMode" id="interactiveRadio"
+            value="option1" checked>
           <label class="form-check-label" for="interactiveRadio">
             Interactive IO (prompt/alert)
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="ioMode" id="nonInteractiveRadio" value="option2">
+          <input class="form-check-input" onchange="changeIOMode();" type="radio" name="ioMode" id="nonInteractiveRadio"
+            value="option2">
           <label class="form-check-label" for="nonInteractiveRadio">
             Non interactive IO
           </label>
@@ -197,6 +189,12 @@
         <td>If value in Storage is less than value of second argument, set status to true</td>
       </tr>
       <tr>
+        <td>neq</td>
+        <td>Storage</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is not equal to value of second argument, set status to true</td>
+      </tr>
+      <tr>
         <th>Working with the data register</th>
         <th></th>
         <th></th>
@@ -225,6 +223,12 @@
         <td>Storage / Number</td>
         <td>-</td>
         <td>Negate value in Storage or Number, write result into data register r1</td>
+      </tr>
+      <tr>
+        <td>mod</td>
+        <td>Storage</td>
+        <td>Storage / Number</td>
+        <td>Calculate modulus of value in Storage with value in Storage or Number, write result into data register r1</td>
       </tr>
       <tr>
         <td>mov</td>
@@ -295,10 +299,11 @@
     crossorigin="anonymous"></script>
 
   <!-- Custom scripts -->
-  <script src="src/index.js"></script>
+
   <script src="src/zahlenmaschine.js"></script>
 
-  <script>var zm = new Zahlenmaschine();</script>
+  <script>document.zm = new Zahlenmaschine();</script>
+  <script src="src/index.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,12 @@
+;zminst v1
+; Implementation of euclidean algorithm in zminst
+inp acc ;Read first argument from prompt / queue
+inp r1 ; Read second argument to r1
+loop: ; a label
+mov r1 r2
+mod acc r1
+mov r2 acc
+neq r1 0 ; compare r1 != 0
+jtr loop
+out acc ; output gcd
+end 

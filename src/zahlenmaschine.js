@@ -9,45 +9,56 @@ class Zahlenmaschine {
         this.specification = "1";
         this.labels = [];
         this.interactiveIO = true;
+        this.input = [];
+        this.output = [];
     }
 
-    parseCode(string_code){
+    connectWithUI(object) {
+        this.ui = object;
+        /* A ui may implement the calls:
+        *  refreshInputs() -> is called every time the inputs change
+        *  refreshOutputs() -> is called every time the outputs change
+        *  markInstruction(instruction) -> is called when an instruction is executed
+        */
+    }
+
+    parseCode(string_code) {
         let code = [];
         let instructionIndex = 0;
         let pending_labels = []; //labels that have no code associated
-        for(let i = 0; i < string_code.length; i++){
+        for (let i = 0; i < string_code.length; i++) {
             // find comment
             let comment = string_code[i].trim().split(';').length > 1 ? string_code[i].trim().split(';')[1] : undefined;
-            
+
             // annotation ";zminst v1" may be used to select specification
-            if (comment?.startsWith("zminst v")){
+            if (comment?.startsWith("zminst v")) {
                 this.selectSpecVersion(comment);
             }
-            
-            let instruction = string_code[i].trim().split(';')[0]
+
+            let instruction = string_code[i].trim().split(';')[0].trim()
 
             // find label
-            if (instruction.endsWith(':')){
+            if (instruction.endsWith(':')) {
                 let labelName = instruction.split(':')[0]
                 pending_labels.push(labelName);
                 continue;
             }
 
             let tokens = instruction.split(' ');
-        
+
             let operation = tokens[0];
-            if(operation == ""){
+            if (operation == "") {
                 continue;
-            }           
+            }
 
             let arg1 = (tokens.length > 1) ? tokens[1] : undefined;
             let arg2 = (tokens.length > 2) ? tokens[2] : undefined;
             let codePosition = i;
-            
+
 
             // fix pending labels
-            for(const labelName of pending_labels){
-                this.labels.push({name: labelName, line: instructionIndex})
+            for (const labelName of pending_labels) {
+                this.labels.push({ name: labelName, line: instructionIndex })
             }
             pending_labels = []
 
@@ -68,84 +79,94 @@ class Zahlenmaschine {
     }
 
     operationDict = {
-        'acc' : (arg1, arg2) => {
+        'acc': (arg1, arg2) => {
             this.accumulator += this.getValue(arg1);
         },
-        'nop' : (arg1, arg2) => {
-            console.log("Nothing happened...");
+        'nop': (arg1, arg2) => {
+            // console.log("Nothing happened...");
         },
-        'jmp' : (arg1, arg2) => {
-            if(this.getLabel(arg1)){
+        'jmp': (arg1, arg2) => {
+            if (this.getLabel(arg1)) {
                 this.instructionPointer = Number(this.getLabel(arg1).line)
             } else {
                 this.instructionPointer = Number(arg1);
             }
-            
+
         },
-        'jre' : (arg1, arg2) => { // Relative jump
+        'jre': (arg1, arg2) => { // Relative jump
             this.instructionPointer += Number(arg1);
         },
-        'end' : (arg1, arg2) => {
+        'end': (arg1, arg2) => {
             this.endWith(this.getValue(arg1));
         },
-        'rst' : (arg1, arg2) => {
+        'rst': (arg1, arg2) => {
             this.accumulator = 0;
             this.r1 = 0;
             this.r2 = 0;
             this.status = false;
         },
-        'jtr' : (arg1, arg2) => {
-            if(this.status){
-                if(this.getLabel(arg1)){
+        'jtr': (arg1, arg2) => {
+            if (this.status) {
+                if (this.getLabel(arg1)) {
                     this.instructionPointer = Number(this.getLabel(arg1).line);
                 } else {
                     this.instructionPointer = Number(arg1);
                 }
             }
         },
-        'grt' : (arg1, arg2) => {
+        'grt': (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) > this.getValue(arg2);
         },
-        'geq' : (arg1, arg2) => {
+        'geq': (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) >= this.getValue(arg2);
         },
-        'equ' : (arg1, arg2) => {
+        'equ': (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) == this.getValue(arg2);
         },
-        'leq' : (arg1, arg2) => {
+        'leq': (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) <= this.getValue(arg2);
         },
-        'les' : (arg1, arg2) => {
+        'les': (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) < this.getValue(arg2);
         },
-        'add' : (arg1, arg2) => {
+        'neq': (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) != this.getValue(arg2);
+        },
+        'add': (arg1, arg2) => {
             this.r1 = Number(this.getStorageValue(arg1)) + this.getValue(arg2);
         },
-        'sub' : (arg1, arg2) => {
+        'sub': (arg1, arg2) => {
             this.r1 = Number(this.getStorageValue(arg1)) - this.getValue(arg2);
         },
-        'mul' : (arg1, arg2) => {
+        'mul': (arg1, arg2) => {
             this.r1 = Number(this.getStorageValue(arg1)) * this.getValue(arg2);
         },
-        'neg' : (arg1, arg2) => {
+        'neg': (arg1, arg2) => {
             this.r1 = - Number(this.getValue(arg1));
         },
-        'mov' : (arg1, arg2) => {
+        'mod': (arg1, arg2) => {
+            this.r1 = Number(this.getStorageValue(arg1)) % this.getValue(arg2);
+        },
+        'mov': (arg1, arg2) => {
             this.setStorageValue(arg2, this.getStorageValue(arg1));
         },
-        'swp' : (arg1, arg2) => {
+        'swp': (arg1, arg2) => {
             let arg1Value = this.getStorageValue(arg1);
-            this.setStorageValue(arg1, this.getStorageValue(arg2))
-            this.setStorageValue(arg2, this.getStorageValue(arg1))
+            this.setStorageValue(arg1, this.getStorageValue(arg2));
+            this.setStorageValue(arg2, this.getStorageValue(arg1));
         },
-        'inp' : (arg1, arg2) => {
-            if(this.interactiveIO){
-                this.setStorageValue(arg1, Number(prompt()))
+        'inp': (arg1, arg2) => {
+            if (this.interactiveIO) {
+                this.setStorageValue(arg1, Number(prompt()));
+            } else {
+                this.setStorageValue(arg1, this.consumeInput());
             }
         },
-        'out' : (arg1, arg2) => {
-            if(this.interactiveIO){
-                alert(this.getValue(arg1))
+        'out': (arg1, arg2) => {
+            if (this.interactiveIO) {
+                alert(this.getValue(arg1));
+            } else {
+                this.addOutput(this.getValue(arg1))
             }
         }
     }
@@ -155,80 +176,109 @@ class Zahlenmaschine {
     }
 
     setStorageValue(argument, value) {
-        if(argument == "acc"){
-           this.accumulator = value;
+        if (argument == "acc") {
+            this.accumulator = value;
         }
-        if(argument == "isp"){
+        if (argument == "isp") {
             this.instructionPointer = value;
         }
-        if(argument == "sta"){
+        if (argument == "sta") {
             this.status = value;
         }
-        if(argument == "r1"){
+        if (argument == "r1") {
             this.r1 = value;
         }
-        if(argument == "r2"){
+        if (argument == "r2") {
             this.r2 = value;
         }
-        if(argument == "nul"){
+        if (argument == "nul") {
             // Can't overwrite null!
         }
     }
 
-    getValue(argument){
-        let storageValue = this.getStorageValue(argument)
-        return storageValue ? Number(storageValue) : Number(argument)
+    getValue(argument) {
+        let storageValue = this.getStorageValue(argument);
+        return storageValue ? Number(storageValue) : Number(argument);
     }
-    
-    getStorageValue(argument){
-        if(argument == "acc"){
+
+    getStorageValue(argument) {
+        if (argument == "acc") {
             return this.accumulator;
         }
-        if(argument == "isp"){
+        if (argument == "isp") {
             return this.instructionPointer;
         }
-        if(argument == "sta"){
+        if (argument == "sta") {
             return Number(this.status);
         }
-        if(argument == "r1"){
+        if (argument == "r1") {
             return Number(this.r1);
         }
-        if(argument == "r2"){
+        if (argument == "r2") {
             return Number(this.r2);
         }
-        if(argument == "nul"){
+        if (argument == "nul") {
             return 0;
         }
     }
 
     executeStep() {
-        if(!this.running){
+        if (!this.running) {
             alert("The Zahlenmaschine is not running!");
             return;
         }
 
         // fetch instruction
         let instruction = this.code[this.instructionPointer];
-        this.markInstruction(instruction)
+        this.markInstruction(instruction);
 
         // perform action according to operation
         let prevIP = this.instructionPointer;
         this.operationDict[instruction.operation](instruction.arg1, instruction.arg2);
 
         // increment instruction pointer
-        if (prevIP == this.instructionPointer){
+        if (prevIP == this.instructionPointer) {
             this.instructionPointer++;
         }
     }
 
-    endWith(arg){
-        alert("Zahlenmaschine shutdown with " + arg);
+    endWith(arg) {
+        if(!!arg){
+            alert("Zahlenmaschine terminated with " + arg);
+        } else {
+            alert("Zahlenmaschine terminated.")
+        }
+        
         this.running = false;
     }
 
-    markInstruction(instruction){
-        // Move this somewhere else -> callback in index.js?
-        this.markedInstruction?.clear()
-        this.markedInstruction = codeMirror.doc.markText({line: instruction.codePosition,ch: 0}, {line:instruction.codePosition, ch: 99}, {className: "marked"})
+    markInstruction(instruction) {
+        this.ui.markInstruction(instruction);
+    }
+
+    addInput(input) {
+        this.input.push(Number(input));
+    }
+
+    consumeInput() {
+        if (this.input.length > 0) {
+            let value = this.input.shift();
+            this.ui.refreshInputs();
+            return value;
+        }
+        // TODO: Pause execution
+    }
+
+    getInput() {
+        return this.input;
+    }
+
+    getOutput() {
+        return this.output;
+    }
+
+    addOutput(value) {
+        this.output.push(value);
+        this.ui.refreshOutputs();
     }
 }

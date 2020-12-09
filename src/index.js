@@ -1,7 +1,9 @@
 let codeEditorNode = document.getElementById("editor")
 
+const euclid = ";zminst v1\n; Implementation of euclidean algorithm in zminst\ninp acc ;Read first argument from prompt / queue\ninp r1 ; Read second argument to r1\nloop: ; a label\nmov r1 r2\nmod acc r1\nmov r2 acc\nneq r1 0 ; compare r1 != 0\njtr loop\nout acc ; output gcd\nend"
+
 var codeMirror = CodeMirror(codeEditorNode, {
-    value: ";zminst v1\nacc 1\nacc 2\nacc 4\nacc 8\nnop ;do nothing\njmp 1",
+    value: euclid,
     lineNumbers: true,
     mode: 'zminst',
     firstLineNumber: 0
@@ -11,16 +13,16 @@ let stopped = false;
 
 async function execute() {
     stopped = false;
-    zm.enterCode(codeMirror.doc.getValue());
+    document.zm.enterCode(codeMirror.doc.getValue());
     let executeButton = document.getElementById("execute-button")
     executeButton.setAttribute("onclick", "stop()");
     executeButton.innerHTML = "<i class=\"fa fa-pause\"></i>";
     executeButton.setAttribute("title", "Stop execution");
-    while (zm.running && !stopped){
-        zm.executeStep();
+    while (document.zm.running && !stopped) {
+        document.zm.executeStep();
         updateInfo()
         await new Promise(resolve => setTimeout(resolve, 700));
-    }    
+    }
 }
 
 function stop() {
@@ -31,26 +33,83 @@ function stop() {
     stopped = true;
 }
 
+function initZM() {
+    document.zm.connectWithUI({
+        markInstruction: markInstruction,
+        refreshInputs : refreshInputQueue,
+        refreshOutputs : refreshOutputs
+    })
+    updateInfo();
+    changeIOMode();
+    return document.zm;
+}
+
 function restart() {
-    zm = new Zahlenmaschine()
-    updateInfo()
+    document.zm = new Zahlenmaschine();
+    initZM();
 }
 
 function executeStep() {
-    zm.enterCode(codeMirror.doc.getValue())
-    zm.executeStep()
-    updateInfo()
+    document.zm.enterCode(codeMirror.doc.getValue());
+    document.zm.executeStep();
+    updateInfo();
 }
 
 function updateInfo() {
-    document.getElementById("accumulator-value").innerHTML = zm.accumulator;
-    document.getElementById("instruction-pointer-value").innerHTML = zm.instructionPointer;
-    document.getElementById("status-value").innerHTML = zm.status;
-    document.getElementById("r1-value").innerHTML = zm.r1;
-    document.getElementById("r2-value").innerHTML = zm.r2;
+    document.getElementById("accumulator-value").innerHTML = document.zm.accumulator;
+    document.getElementById("instruction-pointer-value").innerHTML = document.zm.instructionPointer;
+    document.getElementById("status-value").innerHTML = document.zm.status;
+    document.getElementById("r1-value").innerHTML = document.zm.r1;
+    document.getElementById("r2-value").innerHTML = document.zm.r2;
 }
 
 function loadFile() {
     const selectedFile = document.getElementById('uploadInput').files[0];
-    selectedFile.text().then((text) => codeMirror.swapDoc(CodeMirror.Doc(text, 'zminst')))
+    selectedFile.text().then((text) => codeMirror.swapDoc(CodeMirror.Doc(text, 'zminst')));
 }
+
+function addInput() {
+    inputText = document.getElementsByClassName("input-text-field")[0].value;
+    document.zm.addInput(inputText);
+    refreshInputQueue();
+}
+
+function refreshInputQueue() {
+    let inputs = document.zm.getInput();
+    let inputList = document.getElementsByClassName("input-list")[0];
+    inputList.innerHTML = "";
+    for (input of inputs) {
+        let listItem = document.createElement("li");
+        listItem.classList.add("list-group-item");
+        listItem.classList.add("py-0");
+        listItem.innerHTML = input;
+        inputList.appendChild(listItem);
+    }
+}
+
+function refreshOutputs() {
+    let outputs = document.zm.getOutput();
+    let outputList = document.getElementsByClassName("output-list")[0];
+    outputList.innerHTML = "";
+    for (output of outputs) {
+        let listItem = document.createElement("li");
+        listItem.classList.add("list-group-item");
+        listItem.classList.add("py-0");
+        listItem.innerHTML = output;
+        outputList.appendChild(listItem);
+    }
+}
+
+let markedInstruction;
+
+function markInstruction(instruction) {
+    markedInstruction?.clear();
+    markedInstruction = codeMirror.doc.markText({ line: instruction.codePosition, ch: 0 }, { line: instruction.codePosition, ch: 99 }, { className: "marked" })
+}
+
+function changeIOMode() {
+    let interactiveMode = document.getElementById("interactiveRadio").checked;
+    document.zm.interactiveIO = interactiveMode;
+}
+
+initZM();
