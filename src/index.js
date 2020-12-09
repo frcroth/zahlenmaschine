@@ -7,10 +7,26 @@ var codeMirror = CodeMirror(codeEditorNode, {
     firstLineNumber: 0
 });
 
-function execute() {
+let stopped = false;
 
-    zm.enterCode(codeMirror.doc.getValue())
-    zm.execute()
+async function execute() {
+    stopped = false;
+    zm.enterCode(codeMirror.doc.getValue());
+    let executeButton = document.getElementById("execute-button")
+    executeButton.setAttribute("onclick", "stop()");
+    executeButton.innerHTML = "Stop execution";
+    while (zm.running && !stopped){
+        zm.executeStep();
+        updateInfo()
+        await new Promise(resolve => setTimeout(resolve, 700));
+    }    
+}
+
+function stop() {
+    let executeButton = document.getElementById("execute-button")
+    executeButton.setAttribute("onclick", "execute()");
+    executeButton.innerHTML = "Execute program";
+    stopped = true;
 }
 
 function restart() {
