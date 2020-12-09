@@ -56,6 +56,18 @@ class Zahlenmaschine {
         },
         'grt' : (arg1, arg2) => {
             this.status = this.getStorageValue(arg1) > Number(arg2)
+        },
+        'geq' : (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) >= Number(arg2)
+        },
+        'equ' : (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) == Number(arg2)
+        },
+        'leq' : (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) <= Number(arg2)
+        },
+        'les' : (arg1, arg2) => {
+            this.status = this.getStorageValue(arg1) < Number(arg2)
         }
     }
     

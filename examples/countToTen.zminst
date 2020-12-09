@@ -1,5 +1,5 @@
 acc 1
-grt acc 9
+equ acc 10
 jtr 4
 jab 0
 end 
