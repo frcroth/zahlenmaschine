@@ -14,7 +14,8 @@ async function execute() {
     zm.enterCode(codeMirror.doc.getValue());
     let executeButton = document.getElementById("execute-button")
     executeButton.setAttribute("onclick", "stop()");
-    executeButton.innerHTML = "Stop execution";
+    executeButton.innerHTML = "<i class=\"fa fa-pause\"></i>";
+    executeButton.setAttribute("title", "Stop execution");
     while (zm.running && !stopped){
         zm.executeStep();
         updateInfo()
@@ -25,7 +26,8 @@ async function execute() {
 function stop() {
     let executeButton = document.getElementById("execute-button")
     executeButton.setAttribute("onclick", "execute()");
-    executeButton.innerHTML = "Execute program";
+    executeButton.setAttribute("title", "Execute program");
+    executeButton.innerHTML = "<i class=\"fa fa-play\"></i>";
     stopped = true;
 }
 
@@ -41,11 +43,11 @@ function executeStep() {
 }
 
 function updateInfo() {
-    document.getElementById("accumulator").innerHTML = "Accumulator: " + zm.accumulator;
-    document.getElementById("instruction-pointer").innerHTML = "Instruction pointer: " + zm.instructionPointer;
-    document.getElementById("status").innerHTML = "Status: " + zm.status;
-    document.getElementById("r1").innerHTML = "Data r1: " + zm.r1;
-    document.getElementById("r2").innerHTML = "Data r2: " + zm.r2;
+    document.getElementById("accumulator-value").innerHTML = zm.accumulator;
+    document.getElementById("instruction-pointer-value").innerHTML = zm.instructionPointer;
+    document.getElementById("status-value").innerHTML = zm.status;
+    document.getElementById("r1-value").innerHTML = zm.r1;
+    document.getElementById("r2-value").innerHTML = zm.r2;
 }
 
 function loadFile() {

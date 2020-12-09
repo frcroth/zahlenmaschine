@@ -15,9 +15,12 @@
 
   <link rel="stylesheet" href="css/custom.css" />
 
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -27,29 +30,89 @@
   <link rel="stylesheet" href="lib/codemirror.css">
   <script src="mode/zminst.js"></script>
 
-  <div class="row">
-    <div class="col-sm" id="editor"></div>
-    <div class="col-sm" id="options">
-      <button id="execute-button" onclick="execute()" class="btn btn-secondary">
-        Execute program
-      </button>
-      <button onclick="executeStep()" class="btn btn-secondary">
-        Execute one step
-      </button>
-      <button onclick="restart()" class="btn btn-secondary">
-        Restart machine
-      </button>
-      <p id="accumulator">Accumulator: 0</p>
-      <p id="instruction-pointer">Instruction pointer: 0</p>
-      <p id="status">Status: false</p>
-      <p id="r1">Data r1: 0</p>
-      <p id="r2">Data r2: 0</p>
-      <div class="form-group">
+  <div class="card">
+    <div class="row">
+      <div class="col-sm">
+        <div id="editor"></div>
         <div class="row">
-          <div class="col">
-            <input class="form-control-file" id="uploadInput" type="file" name="uploadedFile"></div>
-          <div class="col">
-            <button class="btn btn-secondary" onclick="loadFile()">Upload program</button></div>
+          </hr>
+          <div class="col-s" id="input">
+            <p>Input Queue</p>
+            <div class="form-inline">
+              <input type="text" class="form-control" placeholder="42">
+              <button class="btn btn-primary mb-2 input-button">Add Input</button>
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item py-0 input-1"> -</li>
+              <li class="list-group-item py-0 input-2"> -</li>
+              <li class="list-group-item py-0 input-3"> -</li>
+              <li class="list-group-item py-0 input-4"> -</li>
+              <li class="list-group-item py-0 input-5"> -</li>
+            </ul>
+          </div>
+          <div class="col-s" id="output">
+            <p>Output</p>
+            <ul class="list-group">
+              <li class="list-group-item py-0 output-1"> -</li>
+              <li class="list-group-item py-0 output-2"> -</li>
+              <li class="list-group-item py-0 output-3"> -</li>
+              <li class="list-group-item py-0 output-4"> -</li>
+              <li class="list-group-item py-0 output-5"> -</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm" id="options">
+        <button title="Execute program" id="execute-button" onclick="execute()" class="btn btn-secondary">
+          <i class="fa fa-play"></i>
+        </button>
+        <button title="Execute one step" onclick="executeStep()" class="btn btn-secondary">
+          <i class="fa fa-step-forward"></i>
+        </button>
+        <button title="Restart" onclick="restart()" class="btn btn-secondary">
+          <i class="fa fa-power-off"></i>
+        </button>
+        <table>
+          <tr>
+            <td>Accumulator</td>
+            <td id="accumulator-value">0</td>
+          </tr>
+          <tr>
+            <td>Instruction pointer</td>
+            <td id="instruction-pointer-value">0</td>
+          </tr>
+          <tr>
+            <td>Status</td>
+            <td id="status-value">false</td>
+          </tr>
+          <tr>
+            <td>Data r1</td>
+            <td id="r1-value">0</td>
+          </tr>
+          <tr>
+            <td>Data r2</td>
+            <td id="r2-value">0</td>
+          </tr>
+        </table>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="ioMode" id="interactiveRadio" value="option1" checked>
+          <label class="form-check-label" for="interactiveRadio">
+            Interactive IO (prompt/alert)
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="ioMode" id="nonInteractiveRadio" value="option2">
+          <label class="form-check-label" for="nonInteractiveRadio">
+            Non interactive IO
+          </label>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <input class="form-control-file" id="uploadInput" type="file" name="uploadedFile"></div>
+            <div class="col">
+              <button class="btn btn-secondary" onclick="loadFile()">Upload program</button></div>
+          </div>
         </div>
       </div>
     </div>
