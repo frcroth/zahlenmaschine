@@ -68,7 +68,7 @@ class Zahlenmaschine {
 
     operationDict = {
         'acc' : (arg1, arg2) => {
-            this.accumulator += Number(arg1);
+            this.accumulator += this.getValue(arg1);
         },
         'nop' : (arg1, arg2) => {
             console.log("Nothing happened...");
@@ -85,7 +85,7 @@ class Zahlenmaschine {
             this.instructionPointer += Number(arg1);
         },
         'end' : (arg1, arg2) => {
-            this.endWith(arg1);
+            this.endWith(this.getValue(arg1));
         },
         'rst' : (arg1, arg2) => {
             this.accumulator = 0;
@@ -103,34 +103,31 @@ class Zahlenmaschine {
             }
         },
         'grt' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) > Number(arg2);
+            this.status = this.getStorageValue(arg1) > this.getValue(arg2);
         },
         'geq' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) >= Number(arg2);
+            this.status = this.getStorageValue(arg1) >= this.getValue(arg2);
         },
         'equ' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) == Number(arg2);
+            this.status = this.getStorageValue(arg1) == this.getValue(arg2);
         },
         'leq' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) <= Number(arg2);
+            this.status = this.getStorageValue(arg1) <= this.getValue(arg2);
         },
         'les' : (arg1, arg2) => {
-            this.status = this.getStorageValue(arg1) < Number(arg2);
+            this.status = this.getStorageValue(arg1) < this.getValue(arg2);
         },
         'add' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) + Number(arg2);
-        },
-        'adr' : (arg1, arg2) => { //Include this into add?
-            this.r1 = Number(this.getStorageValue(arg1)) + Number(this.getStorageValue(arg2));
+            this.r1 = Number(this.getStorageValue(arg1)) + this.getValue(arg2);
         },
         'sub' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) - Number(arg2);
+            this.r1 = Number(this.getStorageValue(arg1)) - this.getValue(arg2);
         },
         'mul' : (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) * Number(arg2);
+            this.r1 = Number(this.getStorageValue(arg1)) * this.getValue(arg2);
         },
         'neg' : (arg1, arg2) => {
-            this.r1 = - Number(this.getStorageValue(arg1));
+            this.r1 = - Number(this.getValue(arg1));
         },
         'mov' : (arg1, arg2) => {
             this.setStorageValue(arg2, this.getStorageValue(arg1));
@@ -165,6 +162,11 @@ class Zahlenmaschine {
         if(argument == "nul"){
             // Can't overwrite null!
         }
+    }
+
+    getValue(argument){
+        let storageValue = this.getStorageValue(argument)
+        return storageValue ? Number(storageValue) : Number(argument)
     }
     
     getStorageValue(argument){

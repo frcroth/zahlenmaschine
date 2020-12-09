@@ -1,0 +1,11 @@
+;zminst v1
+;Calculate exponentiation
+add nul 2 ; Base 2
+mov r1 r2
+acc 8 ; Exponent 8
+loop:
+mul r1 r2
+acc -1
+grt acc 1
+jtr loop
+end r1

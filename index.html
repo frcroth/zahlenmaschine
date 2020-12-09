@@ -69,9 +69,9 @@
       </tr>
       <tr>
         <td>acc</td>
-        <td>Number</td>
+        <td>Storage / Number</td>
         <td>-</td>
-        <td>Add Number (may be negative) to accumulator.</td>
+        <td>Add Number (or Number in Storage) (may be negative) to accumulator.</td>
       </tr>
       <tr>
         <th>Jumps</th>
@@ -106,32 +106,32 @@
       <tr>
         <td>grt</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>If value in Storage is greater than Number, set status to true</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is greater than value of second argument, set status to true</td>
       </tr>
       <tr>
         <td>geq</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>If value in Storage is greater or equal to Number, set status to true</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is greater or equal to value of second argument, set status to true</td>
       </tr>
       <tr>
         <td>equ</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>If value in Storage is equal to Number, set status to true</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is equal to value of second argument, set status to true</td>
       </tr>
       <tr>
         <td>leq</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>If value in Storage is less or equal to Number, set status to true</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is less or equal to value of second argument, set status to true</td>
       </tr>
       <tr>
         <td>les</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>If value in Storage is less than Number, set status to true</td>
+        <td>Storage / Number</td>
+        <td>If value in Storage is less than value of second argument, set status to true</td>
       </tr>
       <tr>
         <th>Working with the data register</th>
@@ -142,32 +142,26 @@
       <tr>
         <td>add</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>Add value in Storage to Number, write result into data register r1</td>
-      </tr>
-      <tr>
-        <td>adr</td>
-        <td>Storage1</td>
-        <td>Storage2</td>
-        <td>Add values in both Storages, write result into data register r1</td>
+        <td>Storage / Number</td>
+        <td>Add value in Storage / Number to Number, write result into data register r1</td>
       </tr>
       <tr>
         <td>sub</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>Subtract Number from value in Storage, write result into data register r1</td>
+        <td>Storage / Number</td>
+        <td>Subtract Storage / Number from value in Storage, write result into data register r1</td>
       </tr>
       <tr>
         <td>mul</td>
         <td>Storage</td>
-        <td>Number</td>
-        <td>Multiply Number with value in Storage, write result into data register r1</td>
+        <td>Storage / Number</td>
+        <td>Multiply Storage / Number with value in Storage, write result into data register r1</td>
       </tr>
       <tr>
         <td>neg</td>
-        <td>Storage</td>
+        <td>Storage / Number</td>
         <td>-</td>
-        <td>Negate value in Storage, write result into data register r1</td>
+        <td>Negate value in Storage or Number, write result into data register r1</td>
       </tr>
       <tr>
         <td>mov</td>
@@ -201,7 +195,7 @@
       </tr>
       <tr>
         <td>end</td>
-        <td>Value</td>
+        <td>Storage / Number</td>
         <td>-</td>
         <td>Stop machine gracefully with return value</td>
       </tr>
