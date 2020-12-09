@@ -4,7 +4,8 @@ acc 1
 start:
 mov acc r2
 mov r1 acc
-adr r1 r2 ;saves current fibonacci number in r1
+adr r1 r2
+out r1
 leq r1 1000 ;do not exceed 1000
 jtr start
 end

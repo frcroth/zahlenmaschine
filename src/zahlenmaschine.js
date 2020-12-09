@@ -8,6 +8,7 @@ class Zahlenmaschine {
         this.running = true;
         this.specification = "1";
         this.labels = [];
+        this.interactiveIO = true;
     }
 
     parseCode(string_code){
@@ -136,6 +137,16 @@ class Zahlenmaschine {
             let arg1Value = this.getStorageValue(arg1);
             this.setStorageValue(arg1, this.getStorageValue(arg2))
             this.setStorageValue(arg2, this.getStorageValue(arg1))
+        },
+        'inp' : (arg1, arg2) => {
+            if(this.interactiveIO){
+                this.setStorageValue(arg1, Number(prompt()))
+            }
+        },
+        'out' : (arg1, arg2) => {
+            if(this.interactiveIO){
+                alert(this.getValue(arg1))
+            }
         }
     }
 

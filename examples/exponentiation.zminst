@@ -1,8 +1,8 @@
 ;zminst v1
 ;Calculate exponentiation
-add nul 2 ; Base 2
+inp r1 ; Select base
 mov r1 r2
-acc 8 ; Exponent 8
+inp acc ; Select exponent
 loop:
 mul r1 r2
 acc -1
