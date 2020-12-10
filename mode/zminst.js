@@ -25,7 +25,6 @@ CodeMirror.defineMode('zminst', function (config) {
                 word += next;
 
             }
-            console.log("Word: '" + word + "'")
             
             if (state.comment) {
                 state.comment = false;

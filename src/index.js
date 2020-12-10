@@ -6,6 +6,7 @@ var codeMirror = CodeMirror(codeEditorNode, {
     value: euclid,
     lineNumbers: true,
     mode: 'zminst',
+    theme: 'ayu-dark',
     firstLineNumber: 0
 });
 
