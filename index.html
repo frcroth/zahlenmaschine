@@ -77,6 +77,10 @@
             <td id="status-value">false</td>
           </tr>
           <tr>
+            <td>Data r0</td>
+            <td id="r0-value">0</td>
+          </tr>
+          <tr>
             <td>Data r1</td>
             <td id="r1-value">0</td>
           </tr>
@@ -125,7 +129,8 @@
       <li>acc - Accumulator, may be used as a general purpose register</li>
       <li>sta - Status register, stores results of comparisons</li>
       <li>isp - Instruction pointer, determines the next instruction</li>
-      <li>r1 - Data register 1, stores results of data operations</li>
+      <li>r0 - Data register 0, stores results of data operations</li>
+      <li>r1 - Data register 1, may be used to store data</li>
       <li>r2 - Data register 2, may be used to store data</li>
       <li><b>Read only Storage</b></li>
       <li>nul - Null, always 0</li>
@@ -134,7 +139,7 @@
       <li>stc - Stack count</li>
     </ul>
     <p>
-      Comments may be added with the ';' character. All content in
+      Arguments are separated with whitespace. Comments may be added with the ';' character. All content in
       the line behind this character will be ignored. Labels can be added by writing a string and ending it with the ':'
       character.</p>
     <table class="table">
@@ -173,6 +178,24 @@
         <td>Number/Label</td>
         <td>-</td>
         <td>Absolute jump to Number/Label only when status is true.</td>
+      </tr>
+      <tr>
+        <td>bra</td>
+        <td>Number/Label</td>
+        <td>-</td>
+        <td>Branch to subroutine at Number/Label. Instruction pointer is pushed to the stack.</td>
+      </tr>
+      <tr>
+        <td>brc</td>
+        <td>Number/Label</td>
+        <td>-</td>
+        <td>Branch to subroutine at Number/Label only when status is true. Instruction pointer is pushed to the stack.</td>
+      </tr>
+      <tr>
+        <td>ret</td>
+        <td>-</td>
+        <td>-</td>
+        <td>Return from subroutine. Pop instruction pointer from stack.</td>
       </tr>
       <tr>
         <th>Comparisons</th>
@@ -226,38 +249,38 @@
         <td>add</td>
         <td>Storage</td>
         <td>Storage / Number</td>
-        <td>Add value in Storage / Number to Number, write result into data register r1</td>
+        <td>Add value in Storage / Number to Number, write result into data register r0</td>
       </tr>
       <tr>
         <td>sub</td>
         <td>Storage</td>
         <td>Storage / Number</td>
-        <td>Subtract Storage / Number from value in Storage, write result into data register r1</td>
+        <td>Subtract Storage / Number from value in Storage, write result into data register r0</td>
       </tr>
       <tr>
         <td>mul</td>
         <td>Storage</td>
         <td>Storage / Number</td>
-        <td>Multiply Storage / Number with value in Storage, write result into data register r1</td>
+        <td>Multiply Storage / Number with value in Storage, write result into data register r0</td>
       </tr>
       <tr>
         <td>neg</td>
         <td>Storage / Number</td>
         <td>-</td>
-        <td>Negate value in Storage or Number, write result into data register r1</td>
+        <td>Negate value in Storage or Number, write result into data register r0</td>
       </tr>output
       <tr>
         <td>mod</td>
         <td>Storage</td>
         <td>Storage / Number</td>
-        <td>Calculate modulus of value in Storage with value in Storage or Number, write result into data register r1
+        <td>Calculate modulus of value in Storage with value in Storage or Number, write result into data register r0
         </td>
       </tr>
       <tr>
         <td>mov</td>
-        <td>Storage1</td>
+        <td>Storage1 / Number</td>
         <td>Storage2</td>
-        <td>Copy value from Storage1 to Storage2</td>
+        <td>Copy value from Storage1 or Number to Storage2</td>
       </tr>
       <tr>
         <td>swp</td>

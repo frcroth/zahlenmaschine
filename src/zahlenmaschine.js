@@ -2,6 +2,7 @@ class Zahlenmaschine {
     constructor() {
         this.instructionPointer = 0;
         this.accumulator = 0;
+        this.r0 = 0;
         this.r1 = 0;
         this.r2 = 0;
         this.status = false;
@@ -92,6 +93,7 @@ class Zahlenmaschine {
             // console.log("Nothing happened...");
         },
         'jmp': (arg1, arg2) => {
+            this.current_command_effects_ip = true;
             if (this.getLabel(arg1)) {
                 this.instructionPointer = Number(this.getLabel(arg1).line)
             } else {
@@ -100,6 +102,7 @@ class Zahlenmaschine {
 
         },
         'jre': (arg1, arg2) => { // Relative jump
+            this.current_command_effects_ip = true;
             this.instructionPointer += Number(arg1);
         },
         'end': (arg1, arg2) => {
@@ -107,12 +110,14 @@ class Zahlenmaschine {
         },
         'rst': (arg1, arg2) => {
             this.accumulator = 0;
+            this.r0 = 0;
             this.r1 = 0;
             this.r2 = 0;
             this.status = false;
         },
         'jtr': (arg1, arg2) => {
             if (this.status) {
+                this.current_command_effects_ip = true;
                 if (this.getLabel(arg1)) {
                     this.instructionPointer = Number(this.getLabel(arg1).line);
                 } else {
@@ -139,22 +144,22 @@ class Zahlenmaschine {
             this.status = this.getStorageValue(arg1) != this.getValue(arg2);
         },
         'add': (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) + this.getValue(arg2);
+            this.r0 = Number(this.getStorageValue(arg1)) + this.getValue(arg2);
         },
         'sub': (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) - this.getValue(arg2);
+            this.r0 = Number(this.getStorageValue(arg1)) - this.getValue(arg2);
         },
         'mul': (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) * this.getValue(arg2);
+            this.r0 = Number(this.getStorageValue(arg1)) * this.getValue(arg2);
         },
         'neg': (arg1, arg2) => {
-            this.r1 = - Number(this.getValue(arg1));
+            this.r0 = - Number(this.getValue(arg1));
         },
         'mod': (arg1, arg2) => {
-            this.r1 = Number(this.getStorageValue(arg1)) % this.getValue(arg2);
+            this.r0 = Number(this.getStorageValue(arg1)) % this.getValue(arg2);
         },
         'mov': (arg1, arg2) => {
-            this.setStorageValue(arg2, this.getStorageValue(arg1));
+            this.setStorageValue(arg2, this.getValue(arg1));
         },
         'swp': (arg1, arg2) => {
             let arg1Value = this.getStorageValue(arg1);
@@ -178,15 +183,42 @@ class Zahlenmaschine {
         'rnr': (arg1, arg2) => {
             this.randomRange = { lower: Number(arg1), upper: Number(arg2) }
         },
-        'top' : (arg1, arg2) => {
+        'top': (arg1, arg2) => {
             this.setStorageValue(arg1, this.top());
         },
-        'pus' : (arg1, arg2) => {
+        'pus': (arg1, arg2) => {
             this.push(Number(arg1));
         },
-        'pop' : (arg1, arg2) => {
+        'pop': (arg1, arg2) => {
             this.setStorageValue(arg1, this.pop());
-        }
+        },
+        'bra': (arg1, arg2) => {
+            this.current_command_effects_ip = true;
+            if (this.getLabel(arg1)) {
+                this.push(this.instructionPointer + 1);
+                this.instructionPointer = Number(this.getLabel(arg1).line)
+            } else {
+                this.push(this.instructionPointer + 1);
+                this.instructionPointer = Number(arg1);
+            }
+
+        },
+        'brc': (arg1, arg2) => {
+            if (this.status) {
+                this.current_command_effects_ip = true;
+                if (this.getLabel(arg1)) {
+                    this.push(this.instructionPointer + 1);
+                    this.instructionPointer = Number(this.getLabel(arg1).line)
+                } else {
+                    this.push(this.instructionPointer + 1);
+                    this.instructionPointer = Number(arg1);
+                }
+            }
+        },
+        'ret': (arg1, arg2) => {
+            this.current_command_effects_ip = true;
+            this.instructionPointer = this.pop();
+        },
     }
 
     getLabel(string) {
@@ -199,9 +231,13 @@ class Zahlenmaschine {
         }
         if (argument == "isp") {
             this.instructionPointer = value;
+            this.current_command_effects_ip = true;
         }
         if (argument == "sta") {
             this.status = value;
+        }
+        if (argument == "r0") {
+            this.r0 = value;
         }
         if (argument == "r1") {
             this.r1 = value;
@@ -219,7 +255,7 @@ class Zahlenmaschine {
 
     getValue(argument) {
         let storageValue = this.getStorageValue(argument);
-        return storageValue ? Number(storageValue) : Number(argument);
+        return (storageValue != undefined) ? Number(storageValue) : Number(argument);
     }
 
     getStorageValue(argument) {
@@ -231,6 +267,9 @@ class Zahlenmaschine {
         }
         if (argument == "sta") {
             return Number(this.status);
+        }
+        if (argument == "r0") {
+            return Number(this.r0);
         }
         if (argument == "r1") {
             return Number(this.r1);
@@ -262,11 +301,12 @@ class Zahlenmaschine {
         this.markInstruction(instruction);
 
         // perform action according to operation
-        let prevIP = this.instructionPointer;
+        this.current_command_effects_ip = false;
+        //console.log(this.instructionPointer + ": EXECUTING " + instruction.operation + " with arguments " + instruction.arg1 + " " + instruction.arg2)
         this.operationDict[instruction.operation](instruction.arg1, instruction.arg2);
 
         // increment instruction pointer
-        if (prevIP == this.instructionPointer) {
+        if (!this.current_command_effects_ip) {
             this.instructionPointer++;
         }
     }
@@ -311,16 +351,16 @@ class Zahlenmaschine {
         this.ui.refreshOutputs();
     }
 
-    getStack(){
-        return this.stack;
+    getStack() {
+        return this.stack.slice(); // Return copy
     }
 
     top() {
-        return this.stack[this.stack.length-1];
+        return this.stack[this.stack.length - 1];
     }
 
     pop() {
-        let element =  this.stack.pop();
+        let element = this.stack.pop();
         this.ui.refreshStack();
         return element;
     }

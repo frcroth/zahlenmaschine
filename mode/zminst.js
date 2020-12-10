@@ -1,8 +1,8 @@
 CodeMirror.defineMode('zminst', function (config) {
 
-    keywords = ["jmp", "acc", "nop", "jre", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les", "neq", "add", "mul", "sub", "neg", "mov", "swp", "out", "inp", "mod", "rnr", "pus", "pop", "top"]
+    keywords = ["jmp", "acc", "nop", "jre", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les", "neq", "add", "mul", "sub", "neg", "mov", "swp", "out", "inp", "mod", "rnr", "pus", "pop", "top", "ret", "bra", "brc"]
 
-    storage = ["acc", "isp", "sta", "nul", "r1", "r2", "rnd", "sct"]
+    storage = ["acc", "isp", "sta", "nul", "r0", "r1", "r2", "rnd", "sct"]
 
     return {
         startState: function () {
@@ -25,7 +25,7 @@ CodeMirror.defineMode('zminst', function (config) {
                 word += next;
 
             }
-            
+
             if (state.comment) {
                 state.comment = false;
                 return "comment";
@@ -33,18 +33,18 @@ CodeMirror.defineMode('zminst', function (config) {
             if (state.comment_start) {
                 state.comment_start = false;
                 state.comment = true;
-                if (keywords.includes(word.replace(';',''))) {
+                if (keywords.includes(word.replace(';', ''))) {
                     return "keyword";
                 }
             }
-            if (word[word.length-1] == ':' && !state.comment) {
+            if (word[word.length - 1] == ':' && !state.comment) {
                 // Labels
                 return "string"
             }
             if (keywords.includes(word) && !state.comment) {
                 return "keyword"
             }
-            
+
             if (storage.includes(word) && !state.comment) {
                 return "builtin"
             }

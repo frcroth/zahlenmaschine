@@ -1,0 +1,18 @@
+;zminst v1
+inp r1 ; How many numbers should be calculated?
+jmp program_start
+fib_rec:
+add r2 acc
+out r0 ; print fibonacci number
+mov acc r2
+mov r0 acc
+sub r1 1
+mov r0 r1
+neq r1 0
+brc fib_rec
+ret
+program_start:
+mov 1 r2
+acc 1
+bra fib_rec
+end

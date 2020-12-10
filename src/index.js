@@ -1,6 +1,6 @@
 let codeEditorNode = document.getElementById("editor")
 
-const euclid = ";zminst v1\n; Implementation of euclidean algorithm in zminst\ninp acc ;Read first argument from prompt / queue\ninp r1 ; Read second argument to r1\nloop: ; a label\nmov r1 r2\nmod acc r1\nmov r2 acc\nneq r1 0 ; compare r1 != 0\njtr loop\nout acc ; output gcd\nend"
+const euclid = ";zminst v1\n; Implementation of euclidean algorithm in zminst\ninp acc ;Read first argument from prompt / queue\ninp r0 ; Read second argument to r0\nloop: ; a label\nmov r0 r2\nmod acc r0\nmov r2 acc\nneq r0 0 ; compare r0 != 0\njtr loop\nout acc ; output gcd\nend"
 
 var codeMirror = CodeMirror(codeEditorNode, {
     value: euclid,
@@ -64,6 +64,7 @@ function updateInfo() {
     document.getElementById("accumulator-value").innerHTML = document.zm.accumulator;
     document.getElementById("instruction-pointer-value").innerHTML = document.zm.instructionPointer;
     document.getElementById("status-value").innerHTML = document.zm.status;
+    document.getElementById("r0-value").innerHTML = document.zm.r0;
     document.getElementById("r1-value").innerHTML = document.zm.r1;
     document.getElementById("r2-value").innerHTML = document.zm.r2;
 }
@@ -106,7 +107,7 @@ function refreshOutputs() {
 }
 
 function refreshStack() {
-    let stack = document.zm.getStack();
+    let stack = document.zm.getStack().reverse();
     let stackList = document.getElementsByClassName("stack-list")[0];
     stackList.innerHTML = "";
     for (item of stack) {
