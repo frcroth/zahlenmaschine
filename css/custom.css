@@ -1,6 +1,6 @@
 .marked {
-    background-color:yellow;
-} 
+    background-color: yellow;
+}
 
 #editor {
     min-width: 40%;
@@ -11,9 +11,28 @@
 }
 
 #input {
-    margin: auto
+    margin: auto;
+    height: 200px;
+    overflow: auto;
 }
 
 #output {
-    margin: auto
+    margin: auto;
+    height: 200px;
+    overflow: auto;
+}
+
+.stack {
+    height: 300px;
+    overflow: auto; 
+}
+
+.stack-list {
+    position: absolute;
+    bottom: 0;
+    width: 80%
+}
+
+.stack-list-item {
+    max-width: 90%;
 }

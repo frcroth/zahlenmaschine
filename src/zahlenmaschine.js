@@ -9,8 +9,11 @@ class Zahlenmaschine {
         this.specification = "1";
         this.labels = [];
         this.interactiveIO = true;
+
         this.input = [];
         this.output = [];
+        this.stack = [];
+
         this.randomRange = { lower: 0, upper: 100 }
     }
 
@@ -19,6 +22,7 @@ class Zahlenmaschine {
         /* A ui may implement the calls:
         *  refreshInputs() -> is called every time the inputs change
         *  refreshOutputs() -> is called every time the outputs change
+        *  refreshStack() -> is called every time the stack changes
         *  markInstruction(instruction) -> is called when an instruction is executed
         */
     }
@@ -37,6 +41,7 @@ class Zahlenmaschine {
             }
 
             let instruction = string_code[i].trim().split(';')[0].trim()
+            instruction = instruction.toLowerCase()
 
             // find label
             if (instruction.endsWith(':')) {
@@ -172,11 +177,20 @@ class Zahlenmaschine {
         },
         'rnr': (arg1, arg2) => {
             this.randomRange = { lower: Number(arg1), upper: Number(arg2) }
+        },
+        'top' : (arg1, arg2) => {
+            this.setStorageValue(arg1, this.top());
+        },
+        'pus' : (arg1, arg2) => {
+            this.push(Number(arg1));
+        },
+        'pop' : (arg1, arg2) => {
+            this.setStorageValue(arg1, this.pop());
         }
     }
 
     getLabel(string) {
-        return this.labels.find((label) => label.name == string)
+        return this.labels.find((label) => label.name == string);
     }
 
     setStorageValue(argument, value) {
@@ -232,6 +246,9 @@ class Zahlenmaschine {
             let max = Math.floor(this.randomRange.upper);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
+        if (argument == "stc") {
+            return this.stack.length;
+        }
     }
 
     executeStep() {
@@ -258,7 +275,7 @@ class Zahlenmaschine {
         if (!!arg) {
             alert("Zahlenmaschine terminated with " + arg);
         } else {
-            alert("Zahlenmaschine terminated.")
+            alert("Zahlenmaschine terminated.");
         }
 
         this.running = false;
@@ -292,5 +309,24 @@ class Zahlenmaschine {
     addOutput(value) {
         this.output.push(value);
         this.ui.refreshOutputs();
+    }
+
+    getStack(){
+        return this.stack;
+    }
+
+    top() {
+        return this.stack[this.stack.length-1];
+    }
+
+    pop() {
+        let element =  this.stack.pop();
+        this.ui.refreshStack();
+        return element;
+    }
+
+    push(arg) {
+        this.stack.push(arg);
+        this.ui.refreshStack();
     }
 }

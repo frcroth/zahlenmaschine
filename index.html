@@ -39,8 +39,8 @@
           <div class="col-s" id="input">
             <p>Input Queue</p>
             <div class="form-inline">
-              <input type="text" class="form-control input-text-field" placeholder="42">
-              <button onclick="addInput()" class="btn btn-primary mb-2 input-button">Add Input</button>
+              <input type="text" class="form-control input-sm input-text-field" placeholder="42">
+              <button onclick="addInput()" class="btn btn-secondary btn-xs input-button">Add Input</button>
             </div>
             <ul class="list-group input-list">
             </ul>
@@ -98,6 +98,11 @@
             Non interactive IO
           </label>
         </div>
+        <p>Stack</p>
+        <div class="stack">
+          <div class="stack-list">
+          </div>
+        </div>
         <!--
         <div class="form-group">
           <div class="row">
@@ -121,12 +126,16 @@
       <li>isp - Instruction pointer, determines the next instruction</li>
       <li>r1 - Data register 1, stores results of data operations</li>
       <li>r2 - Data register 2, may be used to store data</li>
+      <li><b>Read only Storage</b></li>
       <li>nul - Null, always 0</li>
-      <li>rnd - Random, reading from this register will yield a random number. Ranges may be set with the rnr instruction</li>
-    </ul> 
+      <li>rnd - Random, reading from this register will yield a random number. Ranges may be set with the rnr
+        instruction</li>
+      <li>stc - Stack count</li>
+    </ul>
     <p>
-    Comments may be added with the ';' character. All content in
-    the line behind this character will be ignored. Labels can be added by writing a string and ending it with the ':' character.</p>
+      Comments may be added with the ';' character. All content in
+      the line behind this character will be ignored. Labels can be added by writing a string and ending it with the ':'
+      character.</p>
     <table class="table">
       <tr>
         <th>Operation</th>
@@ -235,12 +244,13 @@
         <td>Storage / Number</td>
         <td>-</td>
         <td>Negate value in Storage or Number, write result into data register r1</td>
-      </tr>
+      </tr>output
       <tr>
         <td>mod</td>
         <td>Storage</td>
         <td>Storage / Number</td>
-        <td>Calculate modulus of value in Storage with value in Storage or Number, write result into data register r1</td>
+        <td>Calculate modulus of value in Storage with value in Storage or Number, write result into data register r1
+        </td>
       </tr>
       <tr>
         <td>mov</td>
@@ -271,6 +281,30 @@
         <td>Storage / Number</td>
         <td>-</td>
         <td>Output value of Number or at Storage to out.</td>
+      </tr>
+      <tr>
+        <th>Stack operations</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>pus</td>
+        <td>Storage / Number</td>
+        <td>-</td>
+        <td>Push Number or value in Storage to stack</td>
+      </tr>
+      <tr>
+        <td>pop</td>
+        <td>Storage</td>
+        <td>-</td>
+        <td>Remove the top most value from stack and place it in Storage.</td>
+      </tr>
+      <tr>
+        <td>top</td>
+        <td>Storage</td>
+        <td>-</td>
+        <td>Copy the top most value from stack and place it in Storage.</td>
       </tr>
       <tr>
         <th>Control operations</th>

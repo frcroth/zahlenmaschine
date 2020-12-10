@@ -37,12 +37,14 @@ function initZM() {
     document.zm.connectWithUI({
         markInstruction: markInstruction,
         refreshInputs: refreshInputQueue,
-        refreshOutputs: refreshOutputs
+        refreshOutputs: refreshOutputs,
+        refreshStack : refreshStack
     })
     updateInfo();
     changeIOMode();
     refreshInputQueue();
     refreshOutputs();
+    refreshStack();
     return document.zm;
 }
 
@@ -99,6 +101,20 @@ function refreshOutputs() {
         listItem.classList.add("py-0");
         listItem.innerHTML = output;
         outputList.appendChild(listItem);
+    }
+}
+
+function refreshStack() {
+    let stack = document.zm.getStack();
+    let stackList = document.getElementsByClassName("stack-list")[0];
+    stackList.innerHTML = "";
+    for (item of stack) {
+        let listItem = document.createElement("li");
+        listItem.classList.add("list-group-item");
+        listItem.classList.add("py-0");
+        listItem.classList.add("stack-list-item");
+        listItem.innerHTML = item;
+        stackList.appendChild(listItem);
     }
 }
 
