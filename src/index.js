@@ -36,11 +36,13 @@ function stop() {
 function initZM() {
     document.zm.connectWithUI({
         markInstruction: markInstruction,
-        refreshInputs : refreshInputQueue,
-        refreshOutputs : refreshOutputs
+        refreshInputs: refreshInputQueue,
+        refreshOutputs: refreshOutputs
     })
     updateInfo();
     changeIOMode();
+    refreshInputQueue();
+    refreshOutputs();
     return document.zm;
 }
 

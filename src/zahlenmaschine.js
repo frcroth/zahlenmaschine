@@ -11,6 +11,7 @@ class Zahlenmaschine {
         this.interactiveIO = true;
         this.input = [];
         this.output = [];
+        this.randomRange = { lower: 0, upper: 100 }
     }
 
     connectWithUI(object) {
@@ -168,6 +169,9 @@ class Zahlenmaschine {
             } else {
                 this.addOutput(this.getValue(arg1))
             }
+        },
+        'rnr': (arg1, arg2) => {
+            this.randomRange = { lower: Number(arg1), upper: Number(arg2) }
         }
     }
 
@@ -193,6 +197,9 @@ class Zahlenmaschine {
         }
         if (argument == "nul") {
             // Can't overwrite null!
+        }
+        if (argument == "rnd") {
+            // Can't overwrite rnd!
         }
     }
 
@@ -220,6 +227,11 @@ class Zahlenmaschine {
         if (argument == "nul") {
             return 0;
         }
+        if (argument == "rnd") {
+            let min = Math.ceil(this.randomRange.lower);
+            let max = Math.floor(this.randomRange.upper);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
     }
 
     executeStep() {
@@ -243,12 +255,12 @@ class Zahlenmaschine {
     }
 
     endWith(arg) {
-        if(!!arg){
+        if (!!arg) {
             alert("Zahlenmaschine terminated with " + arg);
         } else {
             alert("Zahlenmaschine terminated.")
         }
-        
+
         this.running = false;
     }
 
