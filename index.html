@@ -31,115 +31,28 @@
 
   <script src="mode/zminst.js"></script>
 
-  <div class="card">
-    <div class="row">
-      <div class="col-sm">
-        <div id="editor"></div>
-        <div class="row">
-          </hr>
-          <div class="col-s" id="input">
-            <p>Input Queue</p>
-            <div class="form-inline">
-              <input type="text" class="form-control input-sm input-text-field" placeholder="42">
-              <button onclick="addInput()" class="btn btn-secondary btn-xs input-button">Add Input</button>
-            </div>
-            <ul class="list-group input-list">
-            </ul>
-          </div>
-          <div class="col-s" id="output">
-            <p>Output</p>
-            <ul class="list-group output-list">
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm" id="options">
-        <button title="Execute program" id="execute-button" onclick="execute()" class="btn btn-secondary">
-          <i class="fa fa-play"></i>
-        </button>
-        <button title="Execute one step" onclick="executeStep()" class="btn btn-secondary">
-          <i class="fa fa-step-forward"></i>
-        </button>
-        <button title="Restart" onclick="restart()" class="btn btn-secondary">
-          <i class="fa fa-power-off"></i>
-        </button>
-        <table>
-          <tr>
-            <td>Accumulator</td>
-            <td id="accumulator-value">0</td>
-          </tr>
-          <tr>
-            <td>Instruction pointer</td>
-            <td id="instruction-pointer-value">0</td>
-          </tr>
-          <tr>
-            <td>Status</td>
-            <td id="status-value">false</td>
-          </tr>
-          <tr>
-            <td>Data r0</td>
-            <td id="r0-value">0</td>
-          </tr>
-          <tr>
-            <td>Data r1</td>
-            <td id="r1-value">0</td>
-          </tr>
-          <tr>
-            <td>Data r2</td>
-            <td id="r2-value">0</td>
-          </tr>
-        </table>
-        <div class="form-check">
-          <input class="form-check-input" onchange="changeIOMode();" type="radio" name="ioMode" id="interactiveRadio"
-            value="option1" checked>
-          <label class="form-check-label" for="interactiveRadio">
-            Interactive IO (prompt/alert)
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" onchange="changeIOMode();" type="radio" name="ioMode" id="nonInteractiveRadio"
-            value="option2">
-          <label class="form-check-label" for="nonInteractiveRadio">
-            Non interactive IO
-          </label>
-        </div>
-        <p>Stack</p>
-        <div class="stack">
-          <div class="stack-list">
-          </div>
-        </div>
-        <!--
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <input class="form-control-file" id="uploadInput" type="file" name="uploadedFile"></div>
-            <div class="col">
-              <button class="btn btn-secondary" onclick="loadFile()">Upload program</button></div>
-          </div>
-        </div>-->
-      </div>
-    </div>
+  <div id="zm-container">
   </div>
   <div>
     <p>See Documentation <a href="doc.html">here</a></p>
+  </div>
 
-    <!-- BOOTSTRAP -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"></script>
+  <!-- BOOTSTRAP -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
-    <!-- Custom scripts -->
+  <!-- Custom scripts -->
 
-    <script src="src/zahlenmaschine.js"></script>
-
-    <script>document.zm = new Zahlenmaschine();</script>
-    <script src="src/index.js"></script>
+  <script src="src/build.js"></script>
+  <script src="src/zahlenmaschine.js"></script>
+  <script src="src/index.js"></script>
 </body>
 
 </html>

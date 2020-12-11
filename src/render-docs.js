@@ -16,7 +16,7 @@ async function importMarkdownToElement(mdDocument, elementId) {
     if (typeof showdown !== 'undefined') {
         let converter = new showdown.Converter({ tables: true });
         let md = await ajax(mdDocument);
-        if(md) {
+        if (md) {
             let html = converter.makeHtml(md);
             let element = document.getElementById(elementId);
             element.innerHTML = html;

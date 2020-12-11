@@ -2,7 +2,7 @@
 
 ![](doc/screenshot.png)
 
-[Try it!](https://frcroth.de/zahlenmaschine/).
+[Try it!](https://frcroth.de/zahlenmaschine/)
 
 ## User documentation
 

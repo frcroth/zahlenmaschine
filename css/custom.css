@@ -2,21 +2,26 @@
     background-color: yellow;
 }
 
-#editor {
+.editor {
     min-width: 40%;
+}
+
+.control {
+    min-width: 30%;
+    padding: 20px
 }
 
 * {
     font-family: 'IBM Plex Mono', monospace;
 }
 
-#input {
+.input {
     margin: auto;
     height: 200px;
     overflow: auto;
 }
 
-#output {
+.output {
     margin: auto;
     height: 200px;
     overflow: auto;
@@ -24,7 +29,7 @@
 
 .stack {
     height: 300px;
-    overflow: auto; 
+    overflow: auto;
 }
 
 .stack-list {
