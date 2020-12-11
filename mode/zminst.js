@@ -41,11 +41,11 @@ CodeMirror.defineMode('zminst', function (config) {
                 // Labels
                 return "string"
             }
-            if (keywords.includes(word) && !state.comment) {
+            if (keywords.includes(word.toLowerCase()) && !state.comment) {
                 return "keyword"
             }
 
-            if (storage.includes(word) && !state.comment) {
+            if (storage.includes(word.toLowerCase()) && !state.comment) {
                 return "builtin"
             }
         },

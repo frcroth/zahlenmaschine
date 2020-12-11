@@ -36,3 +36,7 @@
 .stack-list-item {
     max-width: 90%;
 }
+
+body {
+    padding: 5px
+}
