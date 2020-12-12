@@ -3,7 +3,12 @@
 }
 
 .editor {
-    min-width: 40%;
+    min-width: 400px;
+}
+
+.row {
+    margin: 0;
+    padding: 0
 }
 
 .control {
@@ -15,15 +20,19 @@
     font-family: 'IBM Plex Mono', monospace;
 }
 
+.input-text-field {
+    width: 100px !important;
+}
+
 .input {
     margin: auto;
-    height: 200px;
+    height: 290px;
     overflow: auto;
 }
 
 .output {
     margin: auto;
-    height: 200px;
+    height: 290px;
     overflow: auto;
 }
 
