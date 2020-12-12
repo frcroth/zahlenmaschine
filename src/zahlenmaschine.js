@@ -1,4 +1,4 @@
-class Zahlenmaschine {
+export default class Zahlenmaschine {
     constructor() {
         this.instructionPointer = 0;
         this.accumulator = 0;

@@ -1,4 +1,4 @@
-'use strict';
+import * as showdown from 'https://jspm.dev/npm:showdown@1.9.1!cjs'
 
 function ajax(url) {
     return new Promise(function (resolve, reject) {
@@ -14,7 +14,7 @@ function ajax(url) {
 
 async function importMarkdownToElement(mdDocument, elementId) {
     if (typeof showdown !== 'undefined') {
-        let converter = new showdown.Converter({ tables: true });
+        let converter = new showdown.default.Converter({ tables: true });
         let md = await ajax(mdDocument);
         if (md) {
             let html = converter.makeHtml(md);
@@ -36,3 +36,5 @@ async function loadDocs() {
     // Bootstrap
     document.querySelectorAll("table").forEach((tableNode) => tableNode.classList.add("table"));
 }
+
+loadDocs();

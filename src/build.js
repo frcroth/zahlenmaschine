@@ -1,10 +1,11 @@
+import Zahlenmaschine from "./zahlenmaschine.js";
+import { v4 } from "https://jspm.dev/npm:uuid@8.3.2";
 // Contains functions to create a new zahlenmaschine
-
-class ZahlenmaschineBox {
+export default class ZahlenmaschineBox {
     // This class handles creating elements for a Zahlenmaschine
 
     constructor() {
-        this.id = "THISISNOTID";
+        this.id = v4();
     }
 
     euclid = ";zminst v1\n" +
