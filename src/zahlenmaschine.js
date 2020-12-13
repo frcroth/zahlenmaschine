@@ -158,6 +158,15 @@ export default class Zahlenmaschine {
         'mod': (arg1, arg2) => {
             this.r0 = Number(this.getStorageValue(arg1)) % this.getValue(arg2);
         },
+        'div': (arg1, arg2) => {
+            this.r0 = Number(this.getStorageValue(arg1)) / this.getValue(arg2);
+        },
+        'cei': (arg1, arg2) => {
+            this.r0 = Math.ceil(Number(this.getValue(arg1)));
+        },
+        'flo': (arg1, arg2) => {
+            this.r0 = Math.floor(Number(this.getValue(arg1)));
+        },
         'mov': (arg1, arg2) => {
             this.setStorageValue(arg2, this.getValue(arg1));
         },

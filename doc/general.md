@@ -32,4 +32,4 @@ Labels can be added by writing a string and ending it with the `:` character. La
 
 #### Data type
 
-There is only one data type that is supported: integer numbers.
+Only numbers are supported. These may be integer or float values.

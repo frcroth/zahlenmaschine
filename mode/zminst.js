@@ -1,6 +1,6 @@
 CodeMirror.defineMode('zminst', function (config) {
 
-    keywords = ["jmp", "acc", "nop", "jre", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les", "neq", "add", "mul", "sub", "neg", "mov", "swp", "out", "inp", "mod", "rnr", "pus", "pop", "top", "ret", "bra", "brc"]
+    keywords = ["jmp", "acc", "nop", "jre", "end", "rst", "jtr", "grt", "geq", "equ", "leq", "les", "neq", "add", "mul", "div", "cei", "flo", "sub", "neg", "mov", "swp", "out", "inp", "mod", "rnr", "pus", "pop", "top", "ret", "bra", "brc"]
 
     storage = ["acc", "isp", "sta", "nul", "r0", "r1", "r2", "rnd", "sct"]
 

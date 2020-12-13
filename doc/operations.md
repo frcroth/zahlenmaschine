@@ -25,6 +25,9 @@ Instruction are written in the format `operation arg1 arg2`, with each instructi
 | mul                      | Storage           | Storage / Number | Multiply Storage / Number with value in Storage, write result into data register r0                        |
 | neg                      | Storage / Number  | -                | Negate value in Storage or Number, write result into data register r0                                      |
 | mod                      | Storage           | Storage / Number | Calculate modulus of value in Storage with value in Storage or Number, write result into data register r0  |
+| cei                      | Storage / Number          | - | Round Storage / Number to the next highest integer, write result into data register r0       |
+| flo                      | Storage / Number          | - | Round Storage / Number to the next lowest integer, write result into data register r0       |
+| div  | Storage | Storage / Number | Divide Storage / Number with value in Storage, write result into data register r0     
 | mov                      | Storage1 / Number | Storage2         | Copy value from Storage1 or Number to Storage2                                                             |
 | swp                      | Storage1          | Storage2         | Copy value from Storage1 to Storage2 and value from Storage2 to Storage1                                   |
 | *I/O*                    |                   |                  |                                                                                                            |
