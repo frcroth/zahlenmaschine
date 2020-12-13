@@ -244,7 +244,8 @@ export default class ZahlenmaschineBox {
             refreshInputs: () => this.refreshInputQueue(),
             refreshOutputs: () => this.refreshOutputs(),
             refreshStack: () => this.refreshStack(),
-            machineDone: () => this.machineDone()
+            machineDone: () => this.machineDone(),
+            setWarning: (message) => this.setWarning(message)
         })
         this.updateInfo();
         this.stopped = true;
@@ -335,6 +336,35 @@ export default class ZahlenmaschineBox {
         this.zm = new Zahlenmaschine();
         this.markedInstruction?.clear();
         this.initZahlenmaschine();
+    }
+
+    setWarning(message) {
+        this.removeWarning();
+
+        this.warningBox = document.createElement("div");
+        this.warningBox.classList.add("warning");
+        this.warningBox.classList.add("row");
+    
+        this.warning = document.createElement("p");
+        this.warning.innerHTML = message;
+        this.warningBox.appendChild(this.warning);
+
+        this.warningCloseBox = document.createElement("div");
+        this.warningCloseBox.classList.add("col-sm");
+        this.warningCloseBox.classList.add("warning-close-box");
+        this.warningCloseBox.onclick = () => this.removeWarning();
+        
+        this.warningClose = document.createElement("span");
+        this.warningClose.innerHTML = "<b>X</b>";
+        this.warningCloseBox.appendChild(this.warningClose);
+        this.warningBox.appendChild(this.warningCloseBox);
+
+        this.container.appendChild(this.warningBox);
+
+    }
+    
+    removeWarning() {
+        this.warningBox?.remove()
     }
 
     markInstruction(instruction) {

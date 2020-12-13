@@ -54,3 +54,15 @@
 body {
     padding: 5px
 }
+
+.warning {
+    background-color: orange;
+    color: black;
+    margin: inherit;
+}
+
+.warning-close-box {
+    text-align: right;
+    cursor: pointer;
+}
+

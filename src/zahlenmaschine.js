@@ -62,6 +62,9 @@ export default class Zahlenmaschine {
             let arg2 = (tokens.length > 2) ? tokens[2] : undefined;
             let codePosition = i;
 
+            if (!Object.keys(this.operationDict).includes(operation)) {
+                this.unknownOperation(operation);
+            }
 
             // fix pending labels
             for (const labelName of pending_labels) {
@@ -159,7 +162,12 @@ export default class Zahlenmaschine {
             this.r0 = Number(this.getStorageValue(arg1)) % this.getValue(arg2);
         },
         'div': (arg1, arg2) => {
-            this.r0 = Number(this.getStorageValue(arg1)) / this.getValue(arg2);
+            let dividend = this.getValue(arg2);
+            if (dividend == 0) {
+                this.divideByZero();
+            } else {
+                this.r0 = Number(this.getStorageValue(arg1)) / dividend;
+            }
         },
         'cei': (arg1, arg2) => {
             this.r0 = Math.ceil(Number(this.getValue(arg1)));
@@ -266,7 +274,14 @@ export default class Zahlenmaschine {
 
     getValue(argument) {
         let storageValue = this.getStorageValue(argument);
-        return (storageValue != undefined) ? Number(storageValue) : Number(argument);
+        if (storageValue != undefined) {
+            return Number(storageValue);
+        }
+        if (isNaN(Number(argument))) {
+            this.notANumber(argument);
+            return 0;
+        }
+        return Number(argument);
     }
 
     getStorageValue(argument) {
@@ -307,11 +322,17 @@ export default class Zahlenmaschine {
             return;
         }
 
-        // fetch instruction
-        if (this.instructionPointer >= this.code.length) {
+        // Check instruction pointer
+        if (this.instructionPointer == this.code.length) {
             this.endWith();
             return;
         }
+        if (this.instructionPointer < 0 || this.instructionPointer > this.code.length) {
+            this.invalidInstructionPointer();
+            return;
+        }
+
+        // fetch instruction
         let instruction = this.code[this.instructionPointer];
         this.markInstruction(instruction);
 
@@ -388,5 +409,22 @@ export default class Zahlenmaschine {
     push(arg) {
         this.stack.push(arg);
         this.ui.refreshStack();
+    }
+
+    divideByZero() {
+        this.ui.setWarning("Could not execute command at " + this.instructionPointer + ": Dividing by zero!");
+    }
+
+    invalidInstructionPointer() {
+        this.endWith("Invalid instruction address!");
+        this.ui.setWarning("Could not execute command at " + this.instructionPointer + ": Invalid instruction address!");
+    }
+
+    unknownOperation(operation) {
+        this.ui.setWarning("Unknown operation '" + operation + "'. Loaded code may not execute.");
+    }
+
+    notANumber(argument) {
+        this.ui.setWarning("Could not execute command at " + this.instructionPointer + ": Could not interpret '" + argument + "' as a number.")
     }
 }
