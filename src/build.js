@@ -197,6 +197,18 @@ export default class ZahlenmaschineBox {
 
         this.controlColumn.appendChild(this.queueIOContainer);
 
+        this.clockSpeedLabel = document.createElement("p");
+        this.clockSpeedLabel.innerHTML = "Clock speed: 2 Hz";
+        this.controlColumn.appendChild(this.clockSpeedLabel);
+
+        this.clockSpeedSlider = document.createElement("input");
+        this.clockSpeedSlider.type = "range";
+        this.clockSpeedSlider.min = 50;
+        this.clockSpeedSlider.max = 1000;
+        this.clockSpeedSlider.value = 500;
+        this.clockSpeedSlider.onchange = () => this.changeClockSpeed();
+        this.controlColumn.appendChild(this.clockSpeedSlider);
+
         this.stackLabel = document.createElement("p");
         this.stackLabel.innerHTML = "Stack";
         this.controlColumn.appendChild(this.stackLabel);
@@ -231,13 +243,17 @@ export default class ZahlenmaschineBox {
             markInstruction: (instruction) => this.markInstruction(instruction),
             refreshInputs: () => this.refreshInputQueue(),
             refreshOutputs: () => this.refreshOutputs(),
-            refreshStack: () => this.refreshStack()
+            refreshStack: () => this.refreshStack(),
+            machineDone: () => this.machineDone()
         })
         this.updateInfo();
+        this.stopped = true;
+        this.updateExecuteButton();
         this.changeIOMode();
         this.refreshInputQueue();
         this.refreshOutputs();
         this.refreshStack();
+        this.changeClockSpeed();
         this.zm.enterCode(this.codeMirror.doc.getValue());
         return this.zm;
     }
@@ -266,6 +282,16 @@ export default class ZahlenmaschineBox {
         }
     }
 
+    machineDone() {
+        // Do something
+    }
+
+    changeClockSpeed() {
+        this.clockPause = this.clockSpeedSlider.value;
+        let frequency = Math.round(1000 / this.clockPause);
+        this.clockSpeedLabel.innerHTML = "Clock speed: " + frequency + " Hz";
+    }
+
     refreshStack() {
         let stack = this.zm.getStack().reverse();
         this.addInputsToList(stack, this.stackList, "stack-list-item");
@@ -274,21 +300,29 @@ export default class ZahlenmaschineBox {
     async pressExecute() {
         this.stopped = false;
         this.zm.enterCode(this.codeMirror.doc.getValue());
-        this.executeButton.onclick = () => this.pressStop();
-        this.executeButton.innerHTML = "<i class=\"fa fa-pause\"></i>";
-        this.executeButton.title = "Stop execution";
+        this.updateExecuteButton();
         while (this.zm.running && !this.stopped) {
             await this.zm.executeStep();
             this.updateInfo()
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, this.clockPause));
+        }
+    }
+
+    updateExecuteButton() {
+        if (this.stopped){
+            this.executeButton.onclick = () => this.pressExecute();
+            this.executeButton.setAttribute("title", "Execute program");
+            this.executeButton.innerHTML = "<i class=\"fa fa-play\"></i>";
+        } else {
+            this.executeButton.onclick = () => this.pressStop();
+            this.executeButton.innerHTML = "<i class=\"fa fa-pause\"></i>";
+            this.executeButton.title = "Stop execution";
         }
     }
 
     pressStop() {
-        this.executeButton.onclick = () => this.pressExecute();
-        this.executeButton.setAttribute("title", "Execute program");
-        this.executeButton.innerHTML = "<i class=\"fa fa-play\"></i>";
         this.stopped = true;
+        this.updateExecuteButton();
     }
 
     async pressStep() {

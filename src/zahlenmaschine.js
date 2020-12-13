@@ -179,7 +179,7 @@ export default class Zahlenmaschine {
             if (this.interactiveIO) {
                 this.setStorageValue(arg1, Number(prompt()));
             } else {
-                while(!this.hasInput()) // wait for input, block execution
+                while (!this.hasInput()) // wait for input, block execution
                     await new Promise(resolve => setTimeout(resolve, 250));
                 this.setStorageValue(arg1, this.consumeInput());
             }
@@ -308,6 +308,10 @@ export default class Zahlenmaschine {
         }
 
         // fetch instruction
+        if (this.instructionPointer >= this.code.length) {
+            this.endWith();
+            return;
+        }
         let instruction = this.code[this.instructionPointer];
         this.markInstruction(instruction);
 
@@ -330,6 +334,7 @@ export default class Zahlenmaschine {
         }
 
         this.running = false;
+        this.ui.machineDone();
     }
 
     markInstruction(instruction) {
