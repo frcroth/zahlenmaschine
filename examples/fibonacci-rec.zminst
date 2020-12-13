@@ -1,4 +1,5 @@
 ;zminst v1
+; Calculate fibonacci numbers
 inp r1 ; How many numbers should be calculated?
 jmp program_start
 fib_rec:

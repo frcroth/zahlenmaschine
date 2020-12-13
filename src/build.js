@@ -1,5 +1,6 @@
 import Zahlenmaschine from "./zahlenmaschine.js";
 import { v4 } from "https://jspm.dev/npm:uuid@8.3.2";
+
 // Contains functions to create a new zahlenmaschine
 export default class ZahlenmaschineBox {
     // This class handles creating elements for a Zahlenmaschine
@@ -8,18 +9,26 @@ export default class ZahlenmaschineBox {
         this.id = v4();
     }
 
-    euclid = ";zminst v1\n" +
-        "; Implementation of euclidean algorithm in zminst\n" +
-        "inp acc ;Read first argument from prompt / queue\n" +
-        "inp r0 ; Read second argument to r0\n" +
-        "loop: ; a label\n" +
-        "mov r0 r2\n" +
-        "mod acc r0\n" +
-        "mov r2 acc\n" +
-        "neq r0 0 ; compare r0 != 0\n" +
-        "jtr loop\n" +
-        "out acc ; output gcd\n" +
-        "end"
+    examples = ["babylonian-sqrt.zminst",
+        "factorial.zminst",
+        "leibniz-pi.zminst",
+        "exponentiation.zminst",
+        "euclid.zminst",
+        "fibonacci-rec.zminst"]
+
+    async getExample() {
+        let exampleURL = "examples/" + this.examples[Math.floor(Math.random() * this.examples.length)];
+        let example = new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(this.responseText);
+            };
+            xhr.onerror = reject;
+            xhr.open('GET', exampleURL);
+            xhr.send();
+        });
+        return example;
+    }
 
 
     getWhiteSpace() {
@@ -28,7 +37,7 @@ export default class ZahlenmaschineBox {
         return whitespace;
     }
 
-    build() {
+    async build() {
         let whitespace = document.createElement("span");
         whitespace.innerHTML = "\n      \n      ";
 
@@ -200,10 +209,10 @@ export default class ZahlenmaschineBox {
         this.stackList.classList.add("stack-list");
         this.stackContainer.appendChild(this.stackList);
 
-
+        let example = await this.getExample();
         // INIT EDITOR
         this.codeMirror = CodeMirror(this.editorContainer, {
-            value: this.euclid,
+            value: example,
             lineNumbers: true,
             mode: 'zminst',
             theme: 'ayu-dark',

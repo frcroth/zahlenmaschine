@@ -1,9 +1,9 @@
 import ZahlenmaschineBox from "./build.js";
 
 let boxNumber = 0;
-function build(node) {
+async function build(node) {
     document["box " + boxNumber] = new ZahlenmaschineBox();
-    node.appendChild(document["box " + boxNumber].build());
+    node.appendChild(await document["box " + boxNumber].build());
     document["box " + boxNumber].codeMirror.refresh();
 }
 
