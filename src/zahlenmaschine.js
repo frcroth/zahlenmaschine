@@ -166,10 +166,12 @@ export default class Zahlenmaschine {
             this.setStorageValue(arg1, this.getStorageValue(arg2));
             this.setStorageValue(arg2, this.getStorageValue(arg1));
         },
-        'inp': (arg1, arg2) => {
+        'inp': async (arg1, arg2) => {
             if (this.interactiveIO) {
                 this.setStorageValue(arg1, Number(prompt()));
             } else {
+                while(!this.hasInput()) // wait for input, block execution
+                    await new Promise(resolve => setTimeout(resolve, 250));
                 this.setStorageValue(arg1, this.consumeInput());
             }
         },
@@ -290,7 +292,7 @@ export default class Zahlenmaschine {
         }
     }
 
-    executeStep() {
+    async executeStep() {
         if (!this.running) {
             alert("The Zahlenmaschine is not running!");
             return;
@@ -303,7 +305,7 @@ export default class Zahlenmaschine {
         // perform action according to operation
         this.current_command_effects_ip = false;
         //console.log(this.instructionPointer + ": EXECUTING " + instruction.operation + " with arguments " + instruction.arg1 + " " + instruction.arg2)
-        this.operationDict[instruction.operation](instruction.arg1, instruction.arg2);
+        await this.operationDict[instruction.operation](instruction.arg1, instruction.arg2);
 
         // increment instruction pointer
         if (!this.current_command_effects_ip) {
@@ -329,8 +331,12 @@ export default class Zahlenmaschine {
         this.input.push(Number(input));
     }
 
+    hasInput() {
+        return this.input.length > 0;
+    }
+
     consumeInput() {
-        if (this.input.length > 0) {
+        if (this.hasInput()) {
             let value = this.input.shift();
             this.ui.refreshInputs();
             return value;

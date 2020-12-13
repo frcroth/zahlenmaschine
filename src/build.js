@@ -155,36 +155,38 @@ export default class ZahlenmaschineBox {
         this.r2row.innerHTML = "<td>Register r2</td><td>0</td>";
         this.valueTable.appendChild(this.r2row);
 
-        this.interactiveIOContainer = document.createElement("div");
-        this.interactiveIOContainer.classList.add("form-check");
+        this.popupIOContainer = document.createElement("div");
+        this.popupIOContainer.classList.add("form-check");
 
-        this.interactiveRadioButton = document.createElement("input");
-        this.interactiveRadioButton.onchange = () => this.changeIOMode();
-        this.interactiveRadioButton.type = "radio";
-        this.interactiveRadioButton.name = "ioMode";
-        this.interactiveRadioButton.checked = true;
-        this.interactiveRadioButton.classList.add("form-check-input");
-        this.interactiveIOContainer.appendChild(this.interactiveRadioButton);
-        this.interactiveLabel = document.createElement("label");
-        this.interactiveLabel.innerHTML = "Interactive IO (prompt/alert)";
-        this.interactiveIOContainer.appendChild(this.interactiveLabel)
+        this.popupRadioButton = document.createElement("input");
+        this.popupRadioButton.onchange = () => this.changeIOMode();
+        this.popupRadioButton.type = "radio";
+        this.popupRadioButton.name = "ioMode" + this.id;
+        this.popupRadioButton.checked = true;
+        this.popupRadioButton.classList.add("form-check-input");
+        this.popupIOContainer.appendChild(this.popupRadioButton);
+        this.popupLabel = document.createElement("label");
+        this.popupLabel.innerHTML = "Pop-up IO";
+        this.popupLabel.title = "Add inputs via prompt, get outputs via alert"
+        this.popupIOContainer.appendChild(this.popupLabel)
 
-        this.controlColumn.appendChild(this.interactiveIOContainer);
+        this.controlColumn.appendChild(this.popupIOContainer);
 
-        this.nonInteractiveIOContainer = document.createElement("div");
-        this.nonInteractiveIOContainer.classList.add("form-check");
+        this.queueIOContainer = document.createElement("div");
+        this.queueIOContainer.classList.add("form-check");
 
-        this.nonInteractiveRadioButton = document.createElement("input");
-        this.nonInteractiveRadioButton.onchange = () => this.changeIOMode();
-        this.nonInteractiveRadioButton.type = "radio";
-        this.nonInteractiveRadioButton.name = "ioMode";
-        this.nonInteractiveRadioButton.classList.add("form-check-input");
-        this.nonInteractiveIOContainer.appendChild(this.nonInteractiveRadioButton);
-        this.nonInteractiveLabel = document.createElement("label");
-        this.nonInteractiveLabel.innerHTML = "Non interactive IO";
-        this.nonInteractiveIOContainer.appendChild(this.nonInteractiveLabel);
+        this.queueRadioButton = document.createElement("input");
+        this.queueRadioButton.onchange = () => this.changeIOMode();
+        this.queueRadioButton.type = "radio";
+        this.queueRadioButton.name = "ioMode" + this.id;
+        this.queueRadioButton.classList.add("form-check-input");
+        this.queueIOContainer.appendChild(this.queueRadioButton);
+        this.queueLabel = document.createElement("label");
+        this.queueLabel.innerHTML = "Queue-based IO";
+        this.queueLabel.title = "Add inputs via the button, execution will pause until a value is supplied.";
+        this.queueIOContainer.appendChild(this.queueLabel);
 
-        this.controlColumn.appendChild(this.nonInteractiveIOContainer);
+        this.controlColumn.appendChild(this.queueIOContainer);
 
         this.stackLabel = document.createElement("p");
         this.stackLabel.innerHTML = "Stack";
@@ -267,7 +269,7 @@ export default class ZahlenmaschineBox {
         this.executeButton.innerHTML = "<i class=\"fa fa-pause\"></i>";
         this.executeButton.title = "Stop execution";
         while (this.zm.running && !this.stopped) {
-            this.zm.executeStep();
+            await this.zm.executeStep();
             this.updateInfo()
             await new Promise(resolve => setTimeout(resolve, 700));
         }
@@ -280,9 +282,9 @@ export default class ZahlenmaschineBox {
         this.stopped = true;
     }
 
-    pressStep() {
+    async pressStep() {
         this.zm.enterCode(this.codeMirror.doc.getValue());
-        this.zm.executeStep();
+        await this.zm.executeStep();
         this.updateInfo();
     }
 
@@ -299,8 +301,15 @@ export default class ZahlenmaschineBox {
     }
 
     changeIOMode() {
-        let interactiveMode = this.interactiveRadioButton.checked;
+        let interactiveMode = this.popupRadioButton.checked;
         this.zm.interactiveIO = interactiveMode;
+        this.inputFormButton.disabled = interactiveMode;
+        this.inputFormInput.disabled = interactiveMode;
+        if (interactiveMode) {
+            this.inputFormButton.title = "Only accepts inputs in Queue-Based input mode"
+        } else {
+            this.inputFormButton.title = "Add an input value. It can be read with the inp operation."
+        }
     }
 
     addInputPress() {
