@@ -1,0 +1,27 @@
+;zminst v1
+; Leibniz pi series
+inp r2 ; number of steps
+pus r2 ; save input value for later
+mov 0 r2 ; will save our sum
+acc 1
+loop:
+mov 1 r1
+mod acc 4
+neq r0 3
+jtr after-negate
+negate:
+neg r1
+mov r0 r1
+after-negate:
+div r1 acc
+add r2 r0
+mov r0 r2
+pop r0
+pus r0
+pus r0
+les stc r0
+acc 2
+jtr loop
+finish:
+mul r2 4
+out r0

@@ -1,0 +1,10 @@
+;zminst v1
+; Factorial
+inp acc
+mov 1 r0
+loop:
+mul r0 acc
+acc -1
+geq acc 1
+jtr loop
+out r0

@@ -198,7 +198,7 @@ export default class Zahlenmaschine {
             this.setStorageValue(arg1, this.top());
         },
         'pus': (arg1, arg2) => {
-            this.push(Number(arg1));
+            this.push(this.getValue(arg1));
         },
         'pop': (arg1, arg2) => {
             this.setStorageValue(arg1, this.pop());

@@ -1,0 +1,15 @@
+;zminst v1
+; Babylonian/ Heron sqrt method
+inp r1 ;Argument
+mov 10 r2 ;Starting value
+mov 0.001 acc ;Epsilon
+loop:
+div r1 r2
+add r0 r2
+div r0 2
+mov r0 r2
+mul r0 r0
+sub r0 r1
+grt r0 acc
+jtr loop
+out r2

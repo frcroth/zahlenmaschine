@@ -271,7 +271,7 @@ export default class ZahlenmaschineBox {
         while (this.zm.running && !this.stopped) {
             await this.zm.executeStep();
             this.updateInfo()
-            await new Promise(resolve => setTimeout(resolve, 700));
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
     }
 
