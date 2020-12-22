@@ -203,6 +203,7 @@ export default class ZahlenmaschineBox {
 
         this.clockSpeedSlider = document.createElement("input");
         this.clockSpeedSlider.type = "range";
+        this.clockSpeedSlider.classList.add("clock-speed-slider");
         this.clockSpeedSlider.min = 50;
         this.clockSpeedSlider.max = 1000;
         this.clockSpeedSlider.value = 500;
