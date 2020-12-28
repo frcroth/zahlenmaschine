@@ -92,8 +92,17 @@ export default class ZahlenmaschineBox {
 
         this.inputList = document.createElement("ul");
         this.inputList.classList.add("list-group");
+        this.inputList.classList.add("io-list");
         this.inputList.classList.add("input-list");
         this.inputColumn.appendChild(this.inputList);
+
+        this.inputConnectButton = document.createElement("button");
+        this.inputConnectButton.innerText = "Connect to output";
+        this.inputConnectButton.title = "Connect input of this machine to another machine's output";
+        this.inputConnectButton.classList.add("btn");
+        this.inputConnectButton.classList.add("btn-secondary");
+        this.inputConnectButton.onclick = () => this.connectInput();
+        this.inputColumn.appendChild(this.inputConnectButton);
 
         this.outputColumn = document.createElement("div");
         this.outputColumn.classList.add("col-s");
@@ -103,8 +112,17 @@ export default class ZahlenmaschineBox {
 
         this.outputList = document.createElement("ul");
         this.outputList.classList.add("list-group");
+        this.outputList.classList.add("io-list");
         this.outputList.classList.add("output-list");
         this.outputColumn.appendChild(this.outputList);
+
+        this.outputConnectButton = document.createElement("button");
+        this.outputConnectButton.innerText = "Connect to input";
+        this.outputConnectButton.title = "Connect output of this machine to another machine's input";
+        this.outputConnectButton.classList.add("btn");
+        this.outputConnectButton.classList.add("btn-secondary");
+        this.outputConnectButton.onclick = () => this.connectOutput();
+        this.outputColumn.appendChild(this.outputConnectButton);
 
         this.controlColumn = document.createElement("div");
         this.controlColumn.classList.add("co-sm");
@@ -164,23 +182,6 @@ export default class ZahlenmaschineBox {
         this.r2row.innerHTML = "<td>Register r2</td><td>0</td>";
         this.valueTable.appendChild(this.r2row);
 
-        this.popupIOContainer = document.createElement("div");
-        this.popupIOContainer.classList.add("form-check");
-
-        this.popupRadioButton = document.createElement("input");
-        this.popupRadioButton.onchange = () => this.changeIOMode();
-        this.popupRadioButton.type = "radio";
-        this.popupRadioButton.name = "ioMode" + this.id;
-        this.popupRadioButton.checked = true;
-        this.popupRadioButton.classList.add("form-check-input");
-        this.popupIOContainer.appendChild(this.popupRadioButton);
-        this.popupLabel = document.createElement("label");
-        this.popupLabel.innerHTML = "Pop-up IO";
-        this.popupLabel.title = "Add inputs via prompt, get outputs via alert"
-        this.popupIOContainer.appendChild(this.popupLabel)
-
-        this.controlColumn.appendChild(this.popupIOContainer);
-
         this.queueIOContainer = document.createElement("div");
         this.queueIOContainer.classList.add("form-check");
 
@@ -188,6 +189,7 @@ export default class ZahlenmaschineBox {
         this.queueRadioButton.onchange = () => this.changeIOMode();
         this.queueRadioButton.type = "radio";
         this.queueRadioButton.name = "ioMode" + this.id;
+        this.queueRadioButton.checked = true;
         this.queueRadioButton.classList.add("form-check-input");
         this.queueIOContainer.appendChild(this.queueRadioButton);
         this.queueLabel = document.createElement("label");
@@ -196,6 +198,22 @@ export default class ZahlenmaschineBox {
         this.queueIOContainer.appendChild(this.queueLabel);
 
         this.controlColumn.appendChild(this.queueIOContainer);
+
+        this.popupIOContainer = document.createElement("div");
+        this.popupIOContainer.classList.add("form-check");
+
+        this.popupRadioButton = document.createElement("input");
+        this.popupRadioButton.onchange = () => this.changeIOMode();
+        this.popupRadioButton.type = "radio";
+        this.popupRadioButton.name = "ioMode" + this.id;
+        this.popupRadioButton.classList.add("form-check-input");
+        this.popupIOContainer.appendChild(this.popupRadioButton);
+        this.popupLabel = document.createElement("label");
+        this.popupLabel.innerHTML = "Pop-up IO";
+        this.popupLabel.title = "Add inputs via prompt, get outputs via alert"
+        this.popupIOContainer.appendChild(this.popupLabel)
+
+        this.controlColumn.appendChild(this.popupIOContainer);
 
         this.clockSpeedLabel = document.createElement("p");
         this.clockSpeedLabel.innerHTML = "Clock speed: 2 Hz";
@@ -376,12 +394,15 @@ export default class ZahlenmaschineBox {
 
     changeIOMode() {
         let interactiveMode = this.popupRadioButton.checked;
-        this.zm.interactiveIO = interactiveMode;
         this.inputFormButton.disabled = interactiveMode;
         this.inputFormInput.disabled = interactiveMode;
         if (interactiveMode) {
+            this.zm.setInputModeInteractive();
+            this.zm.setOutputModeInteractive();
             this.inputFormButton.title = "Only accepts inputs in Queue-Based input mode"
         } else {
+            this.zm.setInputModeQueue();
+            this.zm.setOutputModeQueue();
             this.inputFormButton.title = "Add an input value. It can be read with the inp operation."
         }
     }
@@ -390,6 +411,14 @@ export default class ZahlenmaschineBox {
         let inputText = this.inputFormInput.value;
         this.zm.addInput(inputText);
         this.refreshInputQueue();
+    }
+
+    connectInput() {
+        alert("TODO");
+    }
+
+    connectOutput() {
+        alert("TODO");
     }
 
     updateInfo() {

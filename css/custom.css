@@ -26,14 +26,21 @@
 
 .input {
     margin: auto;
-    height: 290px;
     overflow: auto;
+}
+
+.io-list {
+    height: 250px;
+    overflow-y: auto
 }
 
 .output {
     margin: auto;
-    height: 290px;
     overflow: auto;
+}
+
+.output-list {
+    height: 287px;
 }
 
 .stack {

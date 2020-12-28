@@ -9,10 +9,16 @@ export default class Zahlenmaschine {
         this.running = true;
         this.specification = "1";
         this.labels = [];
-        this.interactiveIO = true;
 
-        this.input = [];
-        this.output = [];
+        this.outputProps = {
+            mode: "queue"
+        };
+        this.inputProps = {
+            mode: "queue"
+        };
+
+        this.inputQueue = [];
+        this.outputQueue = [];
         this.stack = [];
 
         this.randomRange = { lower: 0, upper: 100 }
@@ -184,20 +190,10 @@ export default class Zahlenmaschine {
             this.setStorageValue(arg2, this.getStorageValue(arg1));
         },
         'inp': async (arg1, arg2) => {
-            if (this.interactiveIO) {
-                this.setStorageValue(arg1, Number(prompt()));
-            } else {
-                while (!this.hasInput()) // wait for input, block execution
-                    await new Promise(resolve => setTimeout(resolve, 250));
-                this.setStorageValue(arg1, this.consumeInput());
-            }
+            await this.input(arg1);
         },
-        'out': (arg1, arg2) => {
-            if (this.interactiveIO) {
-                alert(this.getValue(arg1));
-            } else {
-                this.addOutput(this.getValue(arg1))
-            }
+        'out': async (arg1, arg2) => {
+            await this.output(arg1);
         },
         'rnr': (arg1, arg2) => {
             this.randomRange = { lower: Number(arg1), upper: Number(arg2) }
@@ -347,6 +343,73 @@ export default class Zahlenmaschine {
         }
     }
 
+    async input(arg1) {
+        let value
+        if (this.inputProps.mode == 'interactive') {
+            value = Number(prompt());
+        }
+        else if (this.inputProps.mode == 'queue') {
+            while (!this.hasInput()) // wait for input, block execution
+                await new Promise(resolve => setTimeout(resolve, 250));
+            value = this.consumeInput();
+        }
+        else if (this.inputProps.mode == 'connection') {
+            value = await this.inputProps.connection.consumeOutput();
+        }
+        this.setStorageValue(arg1, value);
+    }
+
+    async output(arg1) {
+        let value = this.getValue(arg1);
+        if (this.outputProps.mode == 'interactive') {
+            alert(value);
+        }
+        else if (this.outputProps.mode == 'queue') {
+            this.addOutput(value)
+        }
+        else if (this.outputProps.mode == 'connection') {
+            this.outputProps.connection.addInput(value);
+        }
+    }
+
+    setInputModeInteractive() {
+        this.inputProps = {
+            mode: 'interactive'
+        }
+    }
+
+    setOutputModeInteractive() {
+        this.outputProps = {
+            mode: 'interactive'
+        }
+    }
+
+    setInputModeQueue() {
+        this.inputProps = {
+            mode: 'queue'
+        }
+    }
+
+    setOutputModeQueue() {
+        this.outputProps = {
+            mode: 'queue'
+        }
+    }
+
+    connectToOutputOf(zahlenmaschine) {
+        this.inputProps = {
+            mode: 'connection',
+            connection: zahlenmaschine
+        }
+    }
+
+    connectToInputOf(zahlenmaschine) {
+        this.outputProps = {
+            mode: 'connection',
+            connection: zahlenmaschine
+        }
+    }
+
     endWith(arg) {
         if (!!arg) {
             alert("Zahlenmaschine terminated with " + arg);
@@ -363,32 +426,44 @@ export default class Zahlenmaschine {
     }
 
     addInput(input) {
-        this.input.push(Number(input));
+        this.inputQueue.push(Number(input));
+        this.ui.refreshInputs();
     }
 
     hasInput() {
-        return this.input.length > 0;
+        return this.inputQueue.length > 0;
+    }
+
+    hasOutput() {
+        return this.outputQueue.length > 0;
     }
 
     consumeInput() {
         if (this.hasInput()) {
-            let value = this.input.shift();
+            let value = this.inputQueue.shift();
             this.ui.refreshInputs();
             return value;
         }
-        // TODO: Pause execution
+    }
+
+    async consumeOutput() {
+        while (!this.hasInput()) // wait for input, block execution
+            await new Promise(resolve => setTimeout(resolve, 250));
+        let value = this.outputQueue.shift();
+        this.ui.refreshOutputs();
+        return value;
     }
 
     getInput() {
-        return this.input;
+        return this.inputQueue;
     }
 
     getOutput() {
-        return this.output;
+        return this.outputQueue;
     }
 
     addOutput(value) {
-        this.output.push(value);
+        this.outputQueue.push(value);
         this.ui.refreshOutputs();
     }
 
