@@ -1,15 +1,25 @@
 export default class Zahlenmaschine {
     constructor() {
+        this.initRegisters();
+        this.running = true;
+        this.specification = "1";
+
+        this.initIO();
+        this.stack = [];
+
+        this.randomRange = { lower: 0, upper: 100 }
+    }
+
+    initRegisters() {
         this.instructionPointer = 0;
         this.accumulator = 0;
         this.r0 = 0;
         this.r1 = 0;
         this.r2 = 0;
         this.status = false;
-        this.running = true;
-        this.specification = "1";
-        this.labels = [];
+    }
 
+    initIO() {
         this.outputProps = {
             mode: "queue"
         };
@@ -19,9 +29,6 @@ export default class Zahlenmaschine {
 
         this.inputQueue = [];
         this.outputQueue = [];
-        this.stack = [];
-
-        this.randomRange = { lower: 0, upper: 100 }
     }
 
     connectWithUI(object) {
@@ -36,8 +43,9 @@ export default class Zahlenmaschine {
 
     parseCode(string_code) {
         let code = [];
+        this.labels = [];
         let instructionIndex = 0;
-        let pending_labels = []; //labels that have no code associated
+        let pending_labels = []; // labels that have no code associated
         for (let i = 0; i < string_code.length; i++) {
             // find comment
             let comment = string_code[i].trim().split(';').length > 1 ? string_code[i].trim().split(';')[1] : undefined;
@@ -192,8 +200,8 @@ export default class Zahlenmaschine {
         'inp': async (arg1, arg2) => {
             await this.input(arg1);
         },
-        'out': async (arg1, arg2) => {
-            await this.output(arg1);
+        'out': (arg1, arg2) => {
+            this.output(arg1);
         },
         'rnr': (arg1, arg2) => {
             this.randomRange = { lower: Number(arg1), upper: Number(arg2) }
@@ -359,7 +367,7 @@ export default class Zahlenmaschine {
         this.setStorageValue(arg1, value);
     }
 
-    async output(arg1) {
+    output(arg1) {
         let value = this.getValue(arg1);
         if (this.outputProps.mode == 'interactive') {
             alert(value);

@@ -1,9 +1,9 @@
-.marked {
-    background-color: yellow;
+* {
+    font-family: 'IBM Plex Mono', monospace;
 }
 
-.editor {
-    min-width: 400px;
+.marked {
+    background-color: yellow;
 }
 
 .row {
@@ -11,13 +11,19 @@
     padding: 0
 }
 
+.editor {
+    min-width: 400px;
+}
+
 .control {
     min-width: 30%;
     padding: 20px
 }
 
-* {
-    font-family: 'IBM Plex Mono', monospace;
+.number-label {
+    position: absolute;
+    right: 15px;
+    font-style: italic;
 }
 
 .input-text-field {

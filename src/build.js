@@ -1,12 +1,11 @@
 import Zahlenmaschine from "./zahlenmaschine.js";
-import { v4 } from "https://jspm.dev/npm:uuid@8.3.2";
 
 // Contains functions to create a new zahlenmaschine
 export default class ZahlenmaschineBox {
     // This class handles creating elements for a Zahlenmaschine
 
-    constructor() {
-        this.id = v4();
+    constructor(boxNumber) {
+        this.boxNumber = boxNumber;
     }
 
     examples = ["babylonian-sqrt.zminst",
@@ -42,7 +41,7 @@ export default class ZahlenmaschineBox {
         whitespace.innerHTML = "\n      \n      ";
 
         this.container = document.createElement("div");
-        this.container.id = this.id;
+        this.container.id = this.boxNumber;
         this.container.classList.add("card");
 
         this.mainRow = document.createElement("div");
@@ -55,7 +54,7 @@ export default class ZahlenmaschineBox {
         this.mainRow.appendChild(this.codeRow)
 
         this.editorContainer = document.createElement("div");
-        this.editorContainer.id = "editor" + this.id;
+        this.editorContainer.id = "editor-" + this.boxNumber;
         this.editorContainer.classList.add("editor");
         this.codeRow.appendChild(this.editorContainer);
 
@@ -129,6 +128,11 @@ export default class ZahlenmaschineBox {
         this.controlColumn.classList.add("control");
         this.mainRow.appendChild(this.controlColumn);
 
+        this.numberLabel = document.createElement("p");
+        this.numberLabel.classList.add("number-label");
+        this.numberLabel.innerText = "BOX " + this.boxNumber;
+        this.controlColumn.appendChild(this.numberLabel);
+
         this.executeButton = document.createElement("button");
         this.executeButton.title = "Execute program";
         this.executeButton.classList.add("btn");
@@ -188,7 +192,7 @@ export default class ZahlenmaschineBox {
         this.queueRadioButton = document.createElement("input");
         this.queueRadioButton.onchange = () => this.changeIOMode();
         this.queueRadioButton.type = "radio";
-        this.queueRadioButton.name = "ioMode" + this.id;
+        this.queueRadioButton.name = "ioMode" + this.boxNumber;
         this.queueRadioButton.checked = true;
         this.queueRadioButton.classList.add("form-check-input");
         this.queueIOContainer.appendChild(this.queueRadioButton);
@@ -205,7 +209,7 @@ export default class ZahlenmaschineBox {
         this.popupRadioButton = document.createElement("input");
         this.popupRadioButton.onchange = () => this.changeIOMode();
         this.popupRadioButton.type = "radio";
-        this.popupRadioButton.name = "ioMode" + this.id;
+        this.popupRadioButton.name = "ioMode" + this.boxNumber;
         this.popupRadioButton.classList.add("form-check-input");
         this.popupIOContainer.appendChild(this.popupRadioButton);
         this.popupLabel = document.createElement("label");

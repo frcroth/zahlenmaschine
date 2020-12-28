@@ -2,7 +2,7 @@ import ZahlenmaschineBox from "./build.js";
 
 let boxNumber = 0;
 async function build(node) {
-    document["box " + boxNumber] = new ZahlenmaschineBox();
+    document["box " + boxNumber] = new ZahlenmaschineBox(boxNumber);
     node.appendChild(await document["box " + boxNumber].build());
     document["box " + boxNumber].codeMirror.refresh();
 }
