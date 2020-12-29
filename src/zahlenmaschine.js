@@ -455,7 +455,7 @@ export default class Zahlenmaschine {
     }
 
     async consumeOutput() {
-        while (!this.hasInput()) // wait for input, block execution
+        while (!this.hasOutput()) // wait for input, block execution
             await new Promise(resolve => setTimeout(resolve, 250));
         let value = this.outputQueue.shift();
         this.ui.refreshOutputs();

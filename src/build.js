@@ -333,7 +333,7 @@ export default class ZahlenmaschineBox {
     }
 
     updateExecuteButton() {
-        if (this.stopped){
+        if (this.stopped) {
             this.executeButton.onclick = () => this.pressExecute();
             this.executeButton.setAttribute("title", "Execute program");
             this.executeButton.innerHTML = "<i class=\"fa fa-play\"></i>";
@@ -367,7 +367,7 @@ export default class ZahlenmaschineBox {
         this.warningBox = document.createElement("div");
         this.warningBox.classList.add("warning");
         this.warningBox.classList.add("row");
-    
+
         this.warning = document.createElement("p");
         this.warning.innerHTML = message;
         this.warningBox.appendChild(this.warning);
@@ -376,7 +376,7 @@ export default class ZahlenmaschineBox {
         this.warningCloseBox.classList.add("col-sm");
         this.warningCloseBox.classList.add("warning-close-box");
         this.warningCloseBox.onclick = () => this.removeWarning();
-        
+
         this.warningClose = document.createElement("span");
         this.warningClose.innerHTML = "<b>X</b>";
         this.warningCloseBox.appendChild(this.warningClose);
@@ -385,7 +385,7 @@ export default class ZahlenmaschineBox {
         this.container.appendChild(this.warningBox);
 
     }
-    
+
     removeWarning() {
         this.warningBox?.remove()
     }
@@ -417,12 +417,39 @@ export default class ZahlenmaschineBox {
         this.refreshInputQueue();
     }
 
-    connectInput() {
-        alert("TODO");
+    static getBoxes() {
+        return document.boxes;
     }
 
-    connectOutput() {
-        alert("TODO");
+    static getMachine(boxNumber) {
+        return document["box " + boxNumber];
+    }
+
+    async selectBoxPopup(titleString) {
+        const { value: machine } = await Swal.fire({
+            title: titleString,
+            input: 'select',
+            inputOptions: ZahlenmaschineBox.getBoxes().map((box) => "BOX " + box.boxNumber),
+            inputPlaceholder: 'Some machine',
+            showCancelButton: true,
+        });
+        return machine
+    }
+
+    async connectInput() {
+        let machine = await this.selectBoxPopup('Select which machine\'s output will be used for this machine\'s input')
+        if (machine) {
+            let otherBox = ZahlenmaschineBox.getMachine(machine);
+            this.zm.connectToOutputOf(otherBox.zm);
+        }
+    }
+
+    async connectOutput() {
+        let machine = await this.selectBoxPopup('Select which machine\'s input will come from this machine\'s output')
+        if (machine) {
+            let otherBox = ZahlenmaschineBox.getMachine(machine);
+            this.zm.connectToInputOf(otherBox.zm);
+        }
     }
 
     updateInfo() {
